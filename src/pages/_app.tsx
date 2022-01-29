@@ -1,10 +1,17 @@
-import "../styles/globals.css";
-import type { AppProps } from "next/app";
+import App from "next/app";
+import "./globals.css";
 
-// FIXME: follow this for JSS
-// https://medium.com/wesionary-team/implementing-react-jss-on-next-js-projects-7ceaee985cad
-function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
+export default class MyApp extends App {
+  componentDidMount(): void {
+    const style = document.getElementById("server-side-styles");
+
+    if (style) {
+      style.parentNode?.removeChild(style);
+    }
+  }
+
+  render(): JSX.Element {
+    const { Component, pageProps } = this.props;
+    return <Component {...pageProps} />;
+  }
 }
-
-export default MyApp;

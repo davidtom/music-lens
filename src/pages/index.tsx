@@ -1,10 +1,46 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import styles from "../styles/Home.module.css";
+import { createUseStyles } from "react-jss";
+
+const useStyles = createUseStyles(() => ({
+  container: {
+    padding: "0 2rem",
+  },
+  main: {
+    minHeight: "100vh",
+    padding: "4rem 0",
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  title: {
+    margin: 0,
+    lineHeight: 1.15,
+    fontSize: "4rem",
+    textAlign: "center",
+  },
+  description: {
+    margin: "4rem 0",
+    lineHeight: 1.5,
+    fontSize: "1.5rem",
+    textAlign: "center",
+  },
+  footer: {
+    display: "flex",
+    flex: 1,
+    padding: "2rem 0",
+    borderTop: "1px solid #eaeaea",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+}));
 
 // TODO: check https://nextjs.org/docs/basic-features/layouts for more info on how to use layouts
 const Home: NextPage = () => {
+  const styles = useStyles();
   return (
     <div className={styles.container}>
       <Head>
