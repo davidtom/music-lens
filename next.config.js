@@ -1,6 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-}
+  serverRuntimeConfig: {
+    SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
+    SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
+    SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI,
+    SPOTIFY_SCOPE: process.env.SPOTIFY_SCOPE,
+    SPOTIFY_SHOW_LOGIN_DIALOG: process.env.SPOTIFY_SHOW_LOGIN_DIALOG === "true",
+    SECRET_COOKIE_PASSWORD: process.env.SECRET_COOKIE_PASSWORD,
+    DATABASE_URL: process.env.DATABASE_URL,
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

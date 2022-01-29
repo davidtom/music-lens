@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  spotifyId String @unique
+  displayName String
+  accessToken String?
+  refreshToken String?
+
+  plays Play[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Track {
+  id Int @id @default(autoincrement())
+  name String
+  durationMs Int
+  spotifyId String @unique
+
+  artists ArtistTrack[]
+
+  album Album @relation(fields: [albumId], references: [id])
+  albumId Int
+
+  plays Play[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Play {
+  id Int @id @default(autoincrement())
+
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+
+
+  track Track @relation(fields: [trackId], references:[id])
+  trackId Int
+
+  playedAt DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, trackId, playedAt])
+}
+
+model Artist {
+  id Int @id @default(autoincrement())
+
+  name String
+  spotifyId String @unique
+
+  tracks ArtistTrack[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ArtistTrack {
+  id Int @id @default(autoincrement())
+  
+
+  artist Artist @relation(fields: [artistId], references: [id])
+  artistId Int
+
+  track Track @relation(fields: [trackId], references:[id])
+  trackId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([artistId, trackId])
+}
+
+model Album {
+  id Int @id @default(autoincrement())
+  name String
+  spotifyId String @unique
+  imageUrl String?
+
+  tracks Track[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

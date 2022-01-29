@@ -2,21 +2,28 @@
   "name": "spotify-next",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:push": "dotenv -e .env.development -- prisma db push"
   },
   "dependencies": {
+    "@prisma/client": "^3.8.1",
+    "iron-session": "^6.0.5",
     "next": "12.0.9",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "spotify-web-api-node": "^5.0.2"
   },
   "devDependencies": {
     "@types/node": "17.0.13",
     "@types/react": "17.0.38",
+    "@types/spotify-web-api-node": "^5.0.7",
+    "dotenv-cli": "^4.1.1",
     "eslint": "8.8.0",
     "eslint-config-next": "12.0.9",
+    "prisma": "^3.8.1",
     "typescript": "4.5.5"
   }
 }
