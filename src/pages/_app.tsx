@@ -1,6 +1,8 @@
 import App from "next/app";
 import "./globals.css";
 
+import Layout from "components/Layout";
+
 export default class MyApp extends App {
   componentDidMount(): void {
     const style = document.getElementById("server-side-styles");
@@ -12,6 +14,10 @@ export default class MyApp extends App {
 
   render(): JSX.Element {
     const { Component, pageProps } = this.props;
-    return <Component {...pageProps} />;
+    return (
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    );
   }
 }

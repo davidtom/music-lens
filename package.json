@@ -2,16 +2,18 @@
   "name": "spotify-next",
   "private": true,
   "scripts": {
-    "dev": "next",
+    "dev": "next -p 8080",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 8080",
     "lint": "next lint",
-    "db:push": "dotenv -e .env.development -- prisma db push"
+    "db:push": "dotenv -e .env.development -- prisma db push",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^3.8.1",
     "iron-session": "^6.0.5",
     "next": "12.0.9",
+    "pretty-ms": "^7.0.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-jss": "^10.9.0",

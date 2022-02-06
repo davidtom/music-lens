@@ -4,9 +4,6 @@ import crypto from "crypto";
 
 const scopes = getConfig().serverRuntimeConfig.SPOTIFY_SCOPE.split(" ");
 
-// const toUnixTimestamp = (date: Date): string =>
-//   String(Math.floor(date.getTime() / 1000));
-
 export class SpotifyClient {
   private client: SpotifyWebAPI;
 
@@ -53,13 +50,12 @@ export class SpotifyClient {
   }
 
   public async getRecentlyPlayed(
-    accessToken: string
-    // after?: Date
+    accessToken: string,
+    after?: Date
   ): Promise<SpotifyApi.UsersRecentlyPlayedTracksResponse> {
     this.client.setAccessToken(accessToken);
     const { body } = await this.client.getMyRecentlyPlayedTracks({
-      // TODO: fix being able to query for recently songs after a point in time
-      // after: after ? toUnixTimestamp(after) : undefined,
+      after: after ? after.getTime() : undefined,
       limit: 50,
     });
     return body;

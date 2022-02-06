@@ -1,6 +1,26 @@
-import { InferGetServerSidePropsType } from "next";
+import prettyMs from "pretty-ms";
 
 import { withSessionSsr, SessionUser } from "lib/session";
+import db from "lib/clients/db";
+
+type LinkPageProps = {
+  user: SessionUser;
+  recentlyPlayed: {
+    playedAt: string;
+    track: {
+      name: string;
+      durationMs: number;
+      album: {
+        name: string;
+      };
+      artists: {
+        artist: {
+          name: string;
+        };
+      }[];
+    };
+  }[];
+};
 
 export const getServerSideProps = withSessionSsr(async function ({
   req,
@@ -10,7 +30,7 @@ export const getServerSideProps = withSessionSsr(async function ({
   const user = req.session.user;
 
   // TODO: include this check in withSessionSsr
-  if (user === undefined) {
+  if (user === undefined || !user.id) {
     res.setHeader("location", "/");
     res.statusCode = 302;
     res.end();
@@ -28,23 +48,100 @@ export const getServerSideProps = withSessionSsr(async function ({
     res.end();
   }
 
+  const recentlyPlayed = await db.play.findMany({
+    orderBy: {
+      playedAt: "desc",
+    },
+    select: {
+      playedAt: true,
+      track: {
+        select: {
+          name: true,
+          durationMs: true,
+          album: {
+            select: {
+              name: true,
+            },
+          },
+          artists: {
+            select: {
+              artist: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    where: {
+      userId: user.id,
+    },
+    take: 100,
+  });
+
   return {
-    props: { user: req.session.user },
+    props: {
+      user: req.session.user,
+      recentlyPlayed: recentlyPlayed.map((recentPlay) => ({
+        ...recentPlay,
+        // TODO: this type is not being recognized correctly
+        playedAt: recentPlay.playedAt.getTime(),
+      })),
+    },
   };
 });
 
-const LinkPage: React.FC<
-  InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ user }) => {
+const LinkPage: React.FC<LinkPageProps> = ({ user, recentlyPlayed }) => {
   if (!user) {
     return null;
   }
 
+  const recentlyPlayedList = recentlyPlayed?.map(
+    (recentPlay: any, i: number) => {
+      const playedAt = new Date(recentPlay.playedAt).toLocaleString();
+      return (
+        <tr key={i}>
+          <td>{i + 1}</td>
+          <td>
+            <p>{recentPlay.track.name}</p>
+            <p>
+              {recentPlay.track.artists
+                .map((a: any) => a.artist.name)
+                .join(",")}
+            </p>
+          </td>
+          <td>{recentPlay.track.album.name}</td>
+          <td>
+            {prettyMs(recentPlay.track.durationMs, {
+              colonNotation: true,
+              secondsDecimalDigits: 0,
+            })}
+          </td>
+          <td>{playedAt}</td>
+        </tr>
+      );
+    }
+  );
+
   return (
-    <div>
-      <p>{user.spotifyId}</p>
+    <>
+      <h2>Recently Played Tracks:</h2>
+      {/* FIXME: these belong in a logged in Layout - how do I do that? part of Layout? */}
+      <h1>{user.spotifyId}</h1>
       <a href={"/api/logout"}>Log out</a>
-    </div>
+      <table>
+        <tr>
+          <th>#</th>
+          <th>Track</th>
+          <th>Album</th>
+          <th>Song Duration</th>
+          <th>Played At</th>
+        </tr>
+        {recentlyPlayedList}
+      </table>
+    </>
   );
 };
 
