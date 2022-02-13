@@ -138,14 +138,16 @@ const LinkPage: React.FC<LinkPageProps> = ({ user, recentlyPlayed }) => {
     <>
       <h2>Recently Played Tracks</h2>
       <table>
-        <tr>
-          <th>#</th>
-          <th>Track</th>
-          <th>Album</th>
-          <th>Song Duration</th>
-          <th>Played At</th>
-        </tr>
-        {recentlyPlayedList}
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Track</th>
+            <th>Album</th>
+            <th>Song Duration</th>
+            <th>Played At</th>
+          </tr>
+        </thead>
+        <tbody>{recentlyPlayedList}</tbody>
       </table>
     </>
   );
