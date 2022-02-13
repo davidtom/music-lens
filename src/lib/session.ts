@@ -6,7 +6,7 @@ import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
 export type SessionUser = {
   isLoggedIn: boolean;
   id: number | null;
-  spotifyId: string;
+  spotifyId: string | null;
 };
 
 declare module "iron-session" {

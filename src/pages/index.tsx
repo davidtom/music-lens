@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-import Link from "next/link";
 import { createUseStyles } from "react-jss";
 
 const useStyles = createUseStyles(() => ({
@@ -18,15 +17,7 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <div className={styles.container}>
-        <Link href={"/api/login"} passHref>
-          {/*
-            TODO: this should handle login errors
-            for inspieration: https://github.com/vercel/next.js/blob/canary/examples/with-iron-session/pages/login.tsx
-            */}
-          <button>Log In</button>
-        </Link>
-      </div>
+      <div className={styles.container}>Index Page</div>
     </>
   );
 };

@@ -1,6 +1,8 @@
 import { createUseStyles } from "react-jss";
 import Head from "next/head";
 
+import Header from "./Header";
+
 const useStyles = createUseStyles(() => ({
   container: {
     padding: "0 2rem",
@@ -40,6 +42,7 @@ const Layout: React.FC = ({ children }) => {
         {/* TODO: new favicon */}
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <Header />
       <main className={styles.main}>
         <h1 className={styles.title}>Spotify Play Tracker</h1>
         {children}

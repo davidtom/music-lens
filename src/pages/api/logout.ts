@@ -1,10 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { withSessionApiRoute } from "lib/session";
+import { SessionUser, withSessionApiRoute } from "lib/session";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   req.session.destroy();
-  res.redirect("/");
+
+  const user: SessionUser = { isLoggedIn: false, id: null, spotifyId: null };
+  res.json(user);
 }
 
 export default withSessionApiRoute(handler);

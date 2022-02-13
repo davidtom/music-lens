@@ -1,7 +1,9 @@
+import { useEffect } from "react";
 import prettyMs from "pretty-ms";
 
 import { withSessionSsr, SessionUser } from "lib/session";
 import db from "lib/clients/db";
+import useUser from "lib/useUser";
 
 type LinkPageProps = {
   user: SessionUser;
@@ -94,6 +96,13 @@ export const getServerSideProps = withSessionSsr(async function ({
 });
 
 const LinkPage: React.FC<LinkPageProps> = ({ user, recentlyPlayed }) => {
+  const { mutateUser } = useUser();
+
+  // Need to do this here so we capture users on login
+  useEffect(() => {
+    mutateUser(user);
+  }, [mutateUser, user]);
+
   if (!user) {
     return null;
   }
@@ -127,10 +136,7 @@ const LinkPage: React.FC<LinkPageProps> = ({ user, recentlyPlayed }) => {
 
   return (
     <>
-      <h2>Recently Played Tracks:</h2>
-      {/* FIXME: these belong in a logged in Layout - how do I do that? part of Layout? */}
-      <h1>{user.spotifyId}</h1>
-      <a href={"/api/logout"}>Log out</a>
+      <h2>Recently Played Tracks</h2>
       <table>
         <tr>
           <th>#</th>
