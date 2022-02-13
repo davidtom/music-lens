@@ -5,7 +5,7 @@ import useUser from "lib/useUser";
 import ViewProfileButton from "components/Buttons/ViewProfileButton";
 import LogInButton from "components/Buttons/LogInButton";
 
-const useStyles = createUseStyles(() => ({
+const useStyles = createUseStyles((theme) => ({
   // FIXME: revisit
   container: {
     margin: "4rem 0",

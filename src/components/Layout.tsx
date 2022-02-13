@@ -3,7 +3,7 @@ import Head from "next/head";
 
 import Header from "./Header";
 
-const useStyles = createUseStyles(() => ({
+const useStyles = createUseStyles((theme) => ({
   container: {
     padding: "0 2rem",
   },

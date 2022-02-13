@@ -37,7 +37,6 @@ ORDER BY "Play"."playedAt" DESC;
 ### TODOs
 
 - Gitlab or Github project - need name
-- Address style warning nextjs is showing
 - PGAdmin says the play.playedAt field is a "timestamp without time zone"?
 - Logger
 - API request logging
