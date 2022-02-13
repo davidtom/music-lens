@@ -1,38 +1,36 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
-
 import useUser from "lib/useUser";
-import fetchJson from "lib/fetchJson";
 
-export default function Header() {
-  const { data: user, mutateUser } = useUser();
-  const router = useRouter();
+import LogInButton from "./Buttons/LogInButton";
+import LogOutButton from "./Buttons/LogOutButton";
 
-  const handleLogout = async (e: any) => {
-    e.preventDefault();
-    mutateUser(await fetchJson("/api/logout", { method: "POST" }), false);
-
-    router.push("/");
-  };
+const Header: React.FC = () => {
+  const { data: user } = useUser();
 
   return (
     <header>
+      {/*
+      TODO:
+        - This should be an svg
+        - It should not be so wide (probably fixed when its a logo but confirm)
+        - It should not change style after clicked (also probably fixed via logo)
+        - Should this be in components/Buttons?
+      */}
+      <Link href={"/"} passHref>
+        <a>
+          <h1>Spotify Next</h1>
+        </a>
+      </Link>
       {user?.isLoggedIn ? (
         <>
-          <h1>{user.spotifyId}</h1>
-          <a href={"/api/logout"} onClick={handleLogout}>
-            Log out
-          </a>
+          <h2>{user.spotifyId}</h2>
+          <LogOutButton />
         </>
       ) : (
-        <Link href={"/api/login"} passHref>
-          {/*
-            TODO: this should handle login errors
-            for inspiration: https://github.com/vercel/next.js/blob/canary/examples/with-iron-session/pages/login.tsx
-            */}
-          <button>Log In</button>
-        </Link>
+        <LogInButton />
       )}
     </header>
   );
-}
+};
+
+export default Header;

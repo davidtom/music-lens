@@ -1,6 +1,10 @@
 import type { NextPage } from "next";
 import { createUseStyles } from "react-jss";
 
+import useUser from "lib/useUser";
+import ViewProfileButton from "components/Buttons/ViewProfileButton";
+import LogInButton from "components/Buttons/LogInButton";
+
 const useStyles = createUseStyles(() => ({
   // FIXME: revisit
   container: {
@@ -11,14 +15,19 @@ const useStyles = createUseStyles(() => ({
   },
 }));
 
-// TODO: check https://nextjs.org/docs/basic-features/layouts for more info on how to use layouts
 const Home: NextPage = () => {
   const styles = useStyles();
 
+  const { data: user } = useUser();
+
   return (
-    <>
-      <div className={styles.container}>Index Page</div>
-    </>
+    <div className={styles.container}>
+      {user?.isLoggedIn && user?.spotifyId ? (
+        <ViewProfileButton spotifyId={user.spotifyId} />
+      ) : (
+        <LogInButton />
+      )}
+    </div>
   );
 };
 
