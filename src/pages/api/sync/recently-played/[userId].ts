@@ -17,6 +17,7 @@ import db, {
 
 // TODO: need to auth this - just check a random string
 // TODO: review this project for more ideas: https://github.com/paulphys/nextjs-cron
+// TODO: should this be a POST?
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

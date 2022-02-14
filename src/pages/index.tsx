@@ -18,7 +18,7 @@ const useStyles = createUseStyles((theme) => ({
 const Home: NextPage = () => {
   const styles = useStyles();
 
-  const { data: user } = useUser();
+  const { user } = useUser();
 
   return (
     <div className={styles.container}>

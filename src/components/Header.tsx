@@ -5,7 +5,7 @@ import LogInButton from "./Buttons/LogInButton";
 import LogOutButton from "./Buttons/LogOutButton";
 
 const Header: React.FC = () => {
-  const { data: user } = useUser();
+  const { user } = useUser();
 
   return (
     <header>
