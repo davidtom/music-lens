@@ -1,10 +1,34 @@
+import { createUseStyles } from "react-jss";
 import Link from "next/link";
+
+import Theme from "lib/theme";
 import useUser from "lib/useUser";
 
 import LogInButton from "./Buttons/LogInButton";
-import LogOutButton from "./Buttons/LogOutButton";
+
+const useStyles = createUseStyles((theme: Theme) => ({
+  container: {
+    width: "100%",
+    display: "flex",
+  },
+  leftContainer: {},
+  middleContainer: {
+    flexGrow: 1,
+  },
+  rightContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  navButton: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+  },
+}));
 
 const Header: React.FC = () => {
+  const styles = useStyles();
+
   const { user } = useUser();
 
   return (
@@ -16,19 +40,34 @@ const Header: React.FC = () => {
         - It should not change style after clicked (also probably fixed via logo)
         - Should this be in components/Buttons?
       */}
-      <Link href={"/"} passHref>
-        <a>
-          <h1>Spotify Next</h1>
-        </a>
-      </Link>
-      {user?.isLoggedIn ? (
-        <>
-          <h2>{user.spotifyId}</h2>
-          <LogOutButton />
-        </>
-      ) : (
-        <LogInButton />
-      )}
+      <div className={styles.container}>
+        <div className={styles.leftContainer}>
+          <Link href={"/"} passHref>
+            <a>
+              <h1>Spotify Next</h1>
+            </a>
+          </Link>
+        </div>
+        <div className={styles.middleContainer} />
+        <div className={styles.rightContainer}>
+          {user?.isLoggedIn ? (
+            <>
+              <Link href={`/u/${user.spotifyId}`} passHref>
+                <a className={styles.navButton}>
+                  <p>{"profile"}</p>
+                </a>
+              </Link>
+              <Link href={`/account`} passHref>
+                <a className={styles.navButton}>
+                  <p>{"account"}</p>
+                </a>
+              </Link>
+            </>
+          ) : (
+            <LogInButton />
+          )}
+        </div>
+      </div>
     </header>
   );
 };

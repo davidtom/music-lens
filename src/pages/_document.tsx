@@ -1,13 +1,5 @@
 import Document, { DocumentContext, DocumentInitialProps } from "next/document";
-import {
-  SheetsRegistry,
-  createGenerateId,
-  ThemeProvider,
-  JssProvider,
-} from "react-jss";
-
-// TODO: define a theme
-const theme = {};
+import { SheetsRegistry, createGenerateId, JssProvider } from "react-jss";
 
 export default class JssDocument extends Document {
   static async getInitialProps(
@@ -23,11 +15,9 @@ export default class JssDocument extends Document {
         // eslint-disable-next-line react/display-name
         enhanceApp: (App) => (props) =>
           (
-            <ThemeProvider theme={theme}>
-              <JssProvider registry={registry} generateId={generateId}>
-                <App {...props} />
-              </JssProvider>
-            </ThemeProvider>
+            <JssProvider registry={registry} generateId={generateId}>
+              <App {...props} />
+            </JssProvider>
           ),
       });
 

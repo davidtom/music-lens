@@ -43,10 +43,7 @@ const Layout: React.FC = ({ children }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <main className={styles.main}>
-        <h1 className={styles.title}>Spotify Play Tracker</h1>
-        {children}
-      </main>
+      <main className={styles.main}>{children}</main>
 
       <footer className={styles.footer}>
         <a

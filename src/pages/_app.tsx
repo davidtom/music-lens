@@ -1,7 +1,9 @@
 import App from "next/app";
 import { SWRConfig } from "swr";
+import { ThemeProvider } from "react-jss";
 import "./globals.css";
 
+import { theme } from "lib/theme";
 import fetchJson from "lib/fetchJson";
 import Layout from "components/Layout";
 
@@ -27,9 +29,12 @@ export default class MyApp extends App {
           },
         }}
       >
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        {/* ThemeProvider must be here in order to pass theme: https://stackoverflow.com/a/53398987 */}
+        <ThemeProvider theme={theme}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </ThemeProvider>
       </SWRConfig>
     );
   }
