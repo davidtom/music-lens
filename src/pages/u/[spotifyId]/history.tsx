@@ -2,32 +2,30 @@ import { useMemo } from "react";
 import { useRouter } from "next/router";
 import prettyMs from "pretty-ms";
 
-import useRecentlyPlayed from "lib/useRecentlyPlayed";
+import useUserPlayHistory from "lib/useUserPlayHistory";
 
-const RecentlyPlayedPage: React.FC = () => {
+const HistoryPage: React.FC = () => {
   const { asPath } = useRouter();
 
   const spotifyId = asPath.split("/")[2];
-  const { recentlyPlayed } = useRecentlyPlayed(spotifyId);
+  const { userPlayHistory } = useUserPlayHistory(spotifyId);
 
-  const recentlyPlayedList = useMemo(
+  const playHistory = useMemo(
     () =>
-      recentlyPlayed?.map((recentPlay, i: number) => {
-        const playedAt = new Date(recentPlay.playedAt).toLocaleString();
+      userPlayHistory?.map((play, i: number) => {
+        const playedAt = new Date(play.playedAt).toLocaleString();
         return (
           <tr key={i}>
             <td>{i + 1}</td>
             <td>
-              <p>{recentPlay.track.name}</p>
+              <p>{play.track.name}</p>
               <p>
-                {recentPlay.track.artists
-                  .map((a: any) => a.artist.name)
-                  .join(",")}
+                {play.track.artists.map((a: any) => a.artist.name).join(",")}
               </p>
             </td>
-            <td>{recentPlay.track.album.name}</td>
+            <td>{play.track.album.name}</td>
             <td>
-              {prettyMs(recentPlay.track.durationMs, {
+              {prettyMs(play.track.durationMs, {
                 colonNotation: true,
                 secondsDecimalDigits: 0,
               })}
@@ -36,7 +34,7 @@ const RecentlyPlayedPage: React.FC = () => {
           </tr>
         );
       }),
-    [recentlyPlayed]
+    [userPlayHistory]
   );
 
   return (
@@ -52,10 +50,10 @@ const RecentlyPlayedPage: React.FC = () => {
             <th>Played At</th>
           </tr>
         </thead>
-        <tbody>{recentlyPlayedList}</tbody>
+        <tbody>{playHistory}</tbody>
       </table>
     </>
   );
 };
 
-export default RecentlyPlayedPage;
+export default HistoryPage;

@@ -4,7 +4,8 @@ import { withSessionApiRoute } from "lib/session";
 
 import db from "lib/clients/db";
 
-export type UserRecentlyPlayed = {
+// Note: this is sent as json so everything should be a string
+export type UserPlayHistory = {
   playedAt: string;
   track: {
     name: string;
@@ -20,7 +21,6 @@ export type UserRecentlyPlayed = {
   };
 }[];
 
-// FIXME: rename this to history yeah?
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const spotifyId = req.query.spotifyId;
   // TODO: error handle this correctly
@@ -37,7 +37,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   // TODO: this errored recently from having too many clients/connections? look into that
-  const recentlyPlayed = await db.play.findMany({
+  const history = await db.play.findMany({
     orderBy: {
       playedAt: "desc",
     },
@@ -70,14 +70,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     take: 100,
   });
 
-  const recentlyPlayedFormatted = recentlyPlayed.map((recentPlay) => ({
-    ...recentPlay,
-    // TODO: this type is not being recognized correctly
-    // -> since its a number, but is coming from json its assumed to be a string
-    playedAt: recentPlay.playedAt.getTime(),
+  const userPlayHistoryFormatted: UserPlayHistory = history.map((play) => ({
+    ...play,
+    playedAt: play.playedAt.getTime().toString(),
   }));
 
-  res.json(recentlyPlayedFormatted);
+  res.json(userPlayHistoryFormatted);
 }
 
 export default withSessionApiRoute(handler);

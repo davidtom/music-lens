@@ -23,7 +23,7 @@ export default prisma;
 /********************
  * DB Methods
  *******************/
-export type RecentlyPlayedTrackData = {
+export type UserPlayHistoryData = {
   spotifyId: string;
   name: string;
   durationMs: number;
@@ -39,11 +39,11 @@ export type RecentlyPlayedTrackData = {
   };
 };
 
-export const addUserRecentlyPlayedTrack = async (
+export const addUserPlayHistoryData = async (
   user: User,
-  recentlyPlayedTrack: RecentlyPlayedTrackData
+  userPlayHistoryData: UserPlayHistoryData
 ): Promise<void> => {
-  const { artists, album, ...track } = recentlyPlayedTrack;
+  const { artists, album, ...track } = userPlayHistoryData;
 
   // Album
   const dbAlbum = await prisma.album.upsert({

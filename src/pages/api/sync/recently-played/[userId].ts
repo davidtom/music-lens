@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import client from "lib/clients/spotify";
-import { mapSpotifyPlayHistoryToRecentlyPlayedTrackData } from "lib/util";
+import { mapSpotifyPlayHistoryToUserPlayHistoryData } from "lib/util";
 import db, {
-  addUserRecentlyPlayedTrack,
-  RecentlyPlayedTrackData,
+  addUserPlayHistoryData,
+  UserPlayHistoryData,
 } from "lib/clients/db";
 
 /**
@@ -79,12 +79,12 @@ export default async function handler(
 
     // Get user's recently played tracks and map them into a shape we can use
     const { items } = await client.getRecentlyPlayed(accessToken, lastPlayed);
-    const recentlyPlayedTracks: RecentlyPlayedTrackData[] =
-      mapSpotifyPlayHistoryToRecentlyPlayedTrackData(items);
+    const recentlyPlayedTracks: UserPlayHistoryData[] =
+      mapSpotifyPlayHistoryToUserPlayHistoryData(items);
 
     // Sync recently played tracks to the database
     for (const recentlyPlayedTrack of recentlyPlayedTracks) {
-      await addUserRecentlyPlayedTrack(user, recentlyPlayedTrack);
+      await addUserPlayHistoryData(user, recentlyPlayedTrack);
     }
 
     const count = recentlyPlayedTracks.length;

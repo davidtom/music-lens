@@ -1,4 +1,4 @@
-import { RecentlyPlayedTrackData } from "./clients/db";
+import { UserPlayHistoryData } from "./clients/db";
 
 type SpotifyAlbumImageData = {
   height: number;
@@ -6,14 +6,11 @@ type SpotifyAlbumImageData = {
   url: string;
 };
 
-export const mapSpotifyPlayHistoryToRecentlyPlayedTrackData = (
+export const mapSpotifyPlayHistoryToUserPlayHistoryData = (
   playHistory: SpotifyApi.PlayHistoryObject[]
-): RecentlyPlayedTrackData[] =>
+): UserPlayHistoryData[] =>
   playHistory.reduce(
-    (
-      data: RecentlyPlayedTrackData[],
-      item: SpotifyApi.PlayHistoryObject
-    ): any => {
+    (data: UserPlayHistoryData[], item: SpotifyApi.PlayHistoryObject): any => {
       const { track, played_at } = item;
       const artists = track.artists.map(
         (artist: SpotifyApi.ArtistObjectSimplified) => ({
