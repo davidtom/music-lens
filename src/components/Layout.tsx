@@ -1,31 +1,29 @@
 import { createUseStyles } from "react-jss";
 import Head from "next/head";
 
+import Theme from "lib/theme";
 import Header from "./Header";
 
-const useStyles = createUseStyles((theme) => ({
+const useStyles = createUseStyles((theme: Theme) => ({
   container: {
-    padding: "0 2rem",
+    padding: `0px ${theme.spacing(4)}px`,
   },
   main: {
     minHeight: "100vh",
-    padding: "4rem 0",
+    padding: `${theme.spacing(4)}px 0px`,
     flex: 1,
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
     alignItems: "center",
   },
   title: {
     margin: 0,
-    lineHeight: 1.15,
-    fontSize: "4rem",
     textAlign: "center",
   },
   footer: {
     display: "flex",
     flex: 1,
-    padding: "2rem 0",
+    padding: `${theme.spacing(4)}px 0px`,
     borderTop: "1px solid #eaeaea",
     justifyContent: "center",
     alignItems: "center",
