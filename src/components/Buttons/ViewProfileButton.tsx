@@ -7,7 +7,7 @@ type ViewProfileButtonProps = {
 const ViewProfileButton: React.FC<ViewProfileButtonProps> = ({ spotifyId }) => {
   return (
     <Link href={`/u/${spotifyId}`} passHref>
-      <a>View Stats</a>
+      <a>View Profile</a>
     </Link>
   );
 };
