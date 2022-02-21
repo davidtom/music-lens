@@ -54,12 +54,12 @@ const Header: React.FC = () => {
             <>
               <Link href={`/u/${user.spotifyId}`} passHref>
                 <a className={styles.navButton}>
-                  <p>{"profile"}</p>
+                  <p>{"Profile"}</p>
                 </a>
               </Link>
               <Link href={`/account`} passHref>
                 <a className={styles.navButton}>
-                  <p>{"account"}</p>
+                  <p>{"Account"}</p>
                 </a>
               </Link>
             </>
