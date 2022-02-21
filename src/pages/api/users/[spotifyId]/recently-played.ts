@@ -4,11 +4,35 @@ import { withSessionApiRoute } from "lib/session";
 
 import db from "lib/clients/db";
 
-async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const user = req.session.user;
+export type UserRecentlyPlayed = {
+  playedAt: string;
+  track: {
+    name: string;
+    durationMs: number;
+    album: {
+      name: string;
+    };
+    artists: {
+      artist: {
+        name: string;
+      };
+    }[];
+  };
+}[];
 
-  if (!user || user.isLoggedIn === false || !user.id) {
-    res.status(401).end();
+// FIXME: rename this to history yeah?
+async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const spotifyId = req.query.spotifyId;
+  // TODO: error handle this correctly
+  if (typeof spotifyId !== "string") {
+    console.log(req.query.spotifyId);
+    throw new Error(`Invalid spotifyId: ${spotifyId}`);
+  }
+
+  const user = await db.user.findFirst({ where: { spotifyId } });
+
+  if (!user) {
+    res.status(404).end();
     return;
   }
 
