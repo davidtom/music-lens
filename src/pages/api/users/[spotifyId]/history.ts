@@ -4,9 +4,8 @@ import { withSessionApiRoute } from "lib/session";
 
 import db from "lib/clients/db";
 
-// Note: this is sent as json so everything should be a string
 export type UserPlayHistory = {
-  playedAt: string;
+  playedAt: number;
   track: {
     name: string;
     durationMs: number;
@@ -72,7 +71,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   const userPlayHistoryFormatted: UserPlayHistory = history.map((play) => ({
     ...play,
-    playedAt: play.playedAt.getTime().toString(),
+    playedAt: play.playedAt.getTime(),
   }));
 
   res.json(userPlayHistoryFormatted);
