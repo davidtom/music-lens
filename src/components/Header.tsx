@@ -4,7 +4,7 @@ import Link from "next/link";
 import Theme from "lib/theme";
 import useUser from "lib/useUser";
 
-import LogInButton from "./Buttons/LogInButton";
+import LogInButton from "components/Buttons/LogInButton";
 
 const useStyles = createUseStyles((theme: Theme) => ({
   container: {

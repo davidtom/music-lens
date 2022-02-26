@@ -2,7 +2,7 @@ import { createUseStyles } from "react-jss";
 import Head from "next/head";
 
 import Theme from "lib/theme";
-import Header from "./Header";
+import Header from "components/Header";
 
 const useStyles = createUseStyles((theme: Theme) => ({
   container: {

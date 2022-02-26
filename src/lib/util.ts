@@ -1,4 +1,4 @@
-import { UserPlayHistoryData } from "./clients/db";
+import { UserPlayHistoryData } from "lib/clients/db";
 
 type SpotifyAlbumImageData = {
   height: number;
