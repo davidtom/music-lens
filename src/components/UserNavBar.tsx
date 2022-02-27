@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 
 import Theme from "lib/theme";
 import useUserData from "lib/useUserData";
+import Custom404 from "../pages/404";
 
 const useStyles = createUseStyles((theme: Theme) => ({
   container: {
@@ -31,7 +32,11 @@ const UserNavBar: React.FC = ({ children }) => {
   const spotifyId = query.spotifyId as string;
   const currentPath = asPath.split(spotifyId)[1];
 
-  const { userData } = useUserData(spotifyId);
+  const { userData, error } = useUserData(spotifyId);
+
+  if (error?.status === 404) {
+    return <Custom404 type={"User"} />;
+  }
 
   return (
     <>
