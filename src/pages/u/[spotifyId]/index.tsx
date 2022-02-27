@@ -4,6 +4,7 @@ import prettyMs from "pretty-ms";
 import { withSessionSsr, SessionUser } from "lib/session";
 import useUser from "lib/useUser";
 import useUserTopTracks from "lib/useUserTopTracks";
+import UserNavBar from "components/UserNavBar";
 
 type ProfilePageProps = {
   spotifyId: string;
@@ -67,6 +68,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, spotifyId }) => {
 
   return (
     <>
+      <UserNavBar />
       <h2>Top Songs</h2>
       <table>
         <thead>

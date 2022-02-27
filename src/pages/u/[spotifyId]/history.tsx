@@ -3,6 +3,7 @@ import { GetServerSideProps } from "next";
 import prettyMs from "pretty-ms";
 
 import useUserPlayHistory from "lib/useUserPlayHistory";
+import UserNavBar from "components/UserNavBar";
 
 /**
  * TODO: all /u/:spotifyId pages will probably need/want to use get serverSideProps to access the
@@ -59,6 +60,7 @@ const HistoryPage: React.FC<HistoryPageProps> = ({ spotifyId }) => {
 
   return (
     <>
+      <UserNavBar />
       <h2>Play History</h2>
       <table>
         <thead>
