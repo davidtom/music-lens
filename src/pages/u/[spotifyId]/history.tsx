@@ -1,13 +1,33 @@
 import { useMemo } from "react";
-import { useRouter } from "next/router";
+import { GetServerSideProps } from "next";
 import prettyMs from "pretty-ms";
 
 import useUserPlayHistory from "lib/useUserPlayHistory";
 
-const HistoryPage: React.FC = () => {
-  const { asPath } = useRouter();
+/**
+ * TODO: all /u/:spotifyId pages will probably need/want to use get serverSideProps to access the
+ * spotifyId of the page - most importantly because without it nextjs's prerendering will run and
+ * it wont have a spotifyId, which will cause errors to be thrown. Adding server side props fixes
+ * that, but now we're in a place where all these pages will need it - can we DRY this up?
+ * https://nextjs.org/docs/advanced-features/automatic-static-optimization
+ */
+type HistoryPageProps = {
+  spotifyId: string;
+};
 
-  const spotifyId = asPath.split("/")[2];
+export const getServerSideProps: GetServerSideProps = async function ({
+  query,
+}) {
+  const props: HistoryPageProps = {
+    spotifyId: query.spotifyId as string,
+  };
+
+  return {
+    props,
+  };
+};
+
+const HistoryPage: React.FC<HistoryPageProps> = ({ spotifyId }) => {
   const { userPlayHistory } = useUserPlayHistory(spotifyId);
 
   const playHistory = useMemo(

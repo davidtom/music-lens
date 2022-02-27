@@ -1,5 +1,4 @@
 import { useEffect, useMemo } from "react";
-import { useRouter } from "next/router";
 import prettyMs from "pretty-ms";
 
 import { withSessionSsr, SessionUser } from "lib/session";
@@ -7,11 +6,16 @@ import useUser from "lib/useUser";
 import useUserTopTracks from "lib/useUserTopTracks";
 
 type ProfilePageProps = {
+  spotifyId: string;
   user: SessionUser | null;
 };
 
-export const getServerSideProps = withSessionSsr(async function ({ req }) {
+export const getServerSideProps = withSessionSsr(async function ({
+  req,
+  query,
+}) {
   const props: ProfilePageProps = {
+    spotifyId: query.spotifyId as string,
     user: req.session.user ?? null,
   };
 
@@ -20,8 +24,7 @@ export const getServerSideProps = withSessionSsr(async function ({ req }) {
   };
 });
 
-const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
-  const { asPath } = useRouter();
+const ProfilePage: React.FC<ProfilePageProps> = ({ user, spotifyId }) => {
   const { mutateUser } = useUser();
 
   // TODO: should probably improve this?
@@ -32,7 +35,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user }) => {
     }
   }, [mutateUser, user]);
 
-  const spotifyId = asPath.split("/")[2];
   const { userTopTracks } = useUserTopTracks(spotifyId);
 
   const topTracks = useMemo(

@@ -26,7 +26,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   const spotifyId = req.query.spotifyId;
   // TODO: error handle this correctly
   if (typeof spotifyId !== "string") {
-    console.log(req.query.spotifyId);
     throw new Error(`Invalid spotifyId: ${spotifyId}`);
   }
 
