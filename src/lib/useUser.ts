@@ -3,6 +3,7 @@ import Router from "next/router";
 import useSWR from "swr";
 
 import { SessionUser } from "lib/session";
+import { FetchError } from "lib/fetchJson";
 
 // Source: https://github.com/vercel/next.js/blob/canary/examples/with-iron-session/lib/useUser.ts
 
@@ -10,8 +11,11 @@ export default function useUser({
   redirectTo = "",
   redirectIfFound = false,
 } = {}) {
-  const { data: user, mutate: mutateUser } =
-    useSWR<SessionUser>("/api/auth/user");
+  const {
+    data: user,
+    mutate: mutateUser,
+    error,
+  } = useSWR<SessionUser, FetchError>("/api/auth/user");
 
   useEffect(() => {
     // if no redirect needed, just return (example: already on /dashboard)
@@ -28,5 +32,5 @@ export default function useUser({
     }
   }, [user, redirectIfFound, redirectTo]);
 
-  return { user, mutateUser };
+  return { user, mutateUser, error };
 }

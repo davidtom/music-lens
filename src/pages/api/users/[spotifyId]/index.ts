@@ -18,7 +18,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   const user = await db.user.findFirst({ where: { spotifyId } });
 
   if (!user) {
-    res.status(404).end();
+    res.status(404).send({});
     return;
   }
 
