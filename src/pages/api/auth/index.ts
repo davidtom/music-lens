@@ -7,6 +7,13 @@ import db, { User } from "lib/clients/db";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const code = req.query.code;
+
+  // If users cancel a login request from the Spotify page, we end up back here without a token
+  if (!code) {
+    res.redirect("/");
+    return;
+  }
+
   // TODO: error handle this correctly
   if (typeof code !== "string") {
     throw new Error(`Invalid code: ${code}`);
