@@ -67,8 +67,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, spotifyId }) => {
   );
 
   return (
-    <>
-      <UserNavBar />
+    <UserNavBar>
       <h2>Top Songs</h2>
       <table>
         <thead>
@@ -82,7 +81,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, spotifyId }) => {
         </thead>
         <tbody>{topTracks}</tbody>
       </table>
-    </>
+    </UserNavBar>
   );
 };
 

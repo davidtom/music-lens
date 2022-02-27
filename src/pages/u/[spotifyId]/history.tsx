@@ -59,8 +59,7 @@ const HistoryPage: React.FC<HistoryPageProps> = ({ spotifyId }) => {
   );
 
   return (
-    <>
-      <UserNavBar />
+    <UserNavBar>
       <h2>Play History</h2>
       <table>
         <thead>
@@ -74,7 +73,7 @@ const HistoryPage: React.FC<HistoryPageProps> = ({ spotifyId }) => {
         </thead>
         <tbody>{playHistory}</tbody>
       </table>
-    </>
+    </UserNavBar>
   );
 };
 

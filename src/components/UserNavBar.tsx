@@ -24,7 +24,7 @@ const useStyles = createUseStyles((theme: Theme) => ({
   },
 }));
 
-const UserNavBar: React.FC = () => {
+const UserNavBar: React.FC = ({ children }) => {
   const styles = useStyles();
   const { query, asPath } = useRouter();
 
@@ -34,29 +34,32 @@ const UserNavBar: React.FC = () => {
   const { userData } = useUserData(spotifyId);
 
   return (
-    <div className={styles.container}>
-      <h2>{userData?.displayName}</h2>
-      <div className={styles.navContainer}>
-        <Link href={`/u/${spotifyId}`} passHref>
-          <a
-            className={`${styles.navButton} ${
-              currentPath === "" ? styles.active : ""
-            }`}
-          >
-            <p>{"Top"}</p>
-          </a>
-        </Link>
-        <Link href={`/u/${spotifyId}/history`} passHref>
-          <a
-            className={`${styles.navButton} ${
-              currentPath === "/history" ? styles.active : ""
-            }`}
-          >
-            <p>{"History"}</p>
-          </a>
-        </Link>
+    <>
+      <div className={styles.container}>
+        <h2>{userData?.displayName}</h2>
+        <div className={styles.navContainer}>
+          <Link href={`/u/${spotifyId}`} passHref>
+            <a
+              className={`${styles.navButton} ${
+                currentPath === "" ? styles.active : ""
+              }`}
+            >
+              <p>{"Top"}</p>
+            </a>
+          </Link>
+          <Link href={`/u/${spotifyId}/history`} passHref>
+            <a
+              className={`${styles.navButton} ${
+                currentPath === "/history" ? styles.active : ""
+              }`}
+            >
+              <p>{"History"}</p>
+            </a>
+          </Link>
+        </div>
       </div>
-    </div>
+      {children}
+    </>
   );
 };
 
