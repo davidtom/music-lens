@@ -75,7 +75,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   };
   await req.session.save();
 
-  res.redirect(`/u/${user.spotifyId}`);
+  res.redirect(`${baseUrl}/u/${user.spotifyId}`);
 }
 
 export default withSessionApiRoute(handler);
