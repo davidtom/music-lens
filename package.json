@@ -6,8 +6,12 @@
     "build": "next build",
     "start": "next start -p 8080",
     "lint": "next lint",
+    "db:generate": "prisma generate",
     "db:push": "dotenv -e .env.development -- prisma db push",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "migrate:dev": "dotenv -e .env.development -- prisma migrate dev",
+    "migrate:deploy": "dotenv -e .env.production -- prisma migrate deploy",
+    "migrate:status": "dotenv -e .env.production -- prisma migrate status"
   },
   "dependencies": {
     "@prisma/client": "^3.8.1",
