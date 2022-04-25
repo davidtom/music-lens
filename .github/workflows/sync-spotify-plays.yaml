@@ -1,0 +1,11 @@
+name: 15-minute-cron
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: sync
+        run: |
+          ./src/jobs/sync-spotify-plays.sh ${{ secrets.HOSTNAME }} ${{ secrets.API_SECRET_KEY }}
