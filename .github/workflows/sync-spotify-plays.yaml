@@ -8,4 +8,4 @@ jobs:
     steps:
       - name: sync
         run: |
-          ./src/jobs/sync-spotify-plays.sh ${{ secrets.HOSTNAME }} ${{ secrets.API_SECRET_KEY }}
+          ./src/jobs/sync-spotify-plays.sh ${{ secrets.ORIGIN }} ${{ secrets.API_SECRET_KEY }}
