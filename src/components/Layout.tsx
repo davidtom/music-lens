@@ -35,7 +35,7 @@ const Layout: React.FC = ({ children }) => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Spotify Play Tracker</title>
+        <title>Music Lense</title>
         <meta name="description" content="TODO: describe this app" />
         {/* TODO: new favicon */}
         <link rel="icon" href="/favicon.ico" />
