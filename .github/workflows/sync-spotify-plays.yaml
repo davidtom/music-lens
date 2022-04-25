@@ -6,6 +6,11 @@ jobs:
   cron:
     runs-on: ubuntu-latest
     steps:
-      - name: sync
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+      - run: yarn install
+      - name: Sync Plays
         run: |
           ./src/jobs/sync-spotify-plays.sh ${{ secrets.ORIGIN }} ${{ secrets.API_SECRET_KEY }}
