@@ -44,7 +44,7 @@ const Header: React.FC = () => {
         <div className={styles.leftContainer}>
           <Link href={"/"} passHref>
             <a>
-              <h1>Spotify Next</h1>
+              <h1>Music Lense</h1>
             </a>
           </Link>
         </div>

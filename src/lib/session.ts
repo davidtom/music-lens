@@ -17,8 +17,7 @@ declare module "iron-session" {
 
 export const sessionOptions: IronSessionOptions = {
   password: getConfig().serverRuntimeConfig.SECRET_COOKIE_PASSWORD,
-  // TODO: update when I rename project
-  cookieName: "spotify-next",
+  cookieName: "music-lense",
   cookieOptions: {
     // secure: true should be used in production (HTTPS) but can't be used in development (HTTP)
     secure: process.env.NODE_ENV === "production",
