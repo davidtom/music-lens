@@ -53,7 +53,7 @@ Since crontab permissions were such a bitch, its easiest to use a 'hacky cron' v
 ```bash
 # Run the sync command every 15 minutes
 # Source: https://askubuntu.com/questions/430382/repeat-a-command-every-x-interval-of-time-in-terminal
-while true; do ./src/jobs/sync-spotify-plays.sh; sleep 900; done;
+while true; do ./src/jobs/sync-spotify-plays.sh http://localhost:8080; sleep 900; done;
 ```
 
 Notes on Syncing:
