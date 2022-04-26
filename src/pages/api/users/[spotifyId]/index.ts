@@ -6,6 +6,7 @@ import db from "lib/clients/db";
 
 export type UserData = {
   displayName: string;
+  createdAtMs: number;
 };
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -24,6 +25,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   const userData: UserData = {
     displayName: user.displayName,
+    createdAtMs: user.createdAt.getTime(),
   };
 
   res.json(userData);

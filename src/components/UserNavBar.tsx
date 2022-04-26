@@ -41,7 +41,14 @@ const UserNavBar: React.FC = ({ children }) => {
   return (
     <>
       <div className={styles.container}>
-        <h2>{userData?.displayName}</h2>
+        <div>
+          <h2>{userData?.displayName}</h2>
+          {userData?.createdAtMs && (
+            <p>{`Joined: ${new Date(
+              userData?.createdAtMs
+            ).toLocaleString()}`}</p>
+          )}
+        </div>
         <div className={styles.navContainer}>
           <Link href={`/u/${spotifyId}`} passHref>
             <a
