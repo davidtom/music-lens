@@ -8,6 +8,7 @@ const nextConfig = {
     SPOTIFY_SCOPE: process.env.SPOTIFY_SCOPE,
     SPOTIFY_SHOW_LOGIN_DIALOG: process.env.SPOTIFY_SHOW_LOGIN_DIALOG === "true",
     SECRET_COOKIE_PASSWORD: process.env.SECRET_COOKIE_PASSWORD,
+    API_SECRET: process.env.API_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
   },
 };
