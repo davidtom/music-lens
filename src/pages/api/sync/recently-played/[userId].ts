@@ -34,7 +34,9 @@ export default async function handler(
 
   try {
     // Get the user associated with the request's userId param
-    const { userId } = req.query;
+    const { userId, syncAll } = req.query;
+    const syncFullHistory = !!syncAll;
+
     if (typeof userId !== "string") {
       throw new Error(`Invalid userId: ${userId}`);
     }
@@ -78,7 +80,7 @@ export default async function handler(
     });
 
     let lastPlayed: Date | undefined;
-    if (mostRecentPlay) {
+    if (mostRecentPlay && !syncFullHistory) {
       lastPlayed = mostRecentPlay.playedAt;
       // TODO: logger
       console.log(
