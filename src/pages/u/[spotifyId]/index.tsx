@@ -52,7 +52,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, spotifyId }) => {
                   .join(",")}
               </p>
             </td>
-            <td>{topTrack.track.album.name}</td>
+            <td className={"optionalColumn"}>{topTrack.track.album.name}</td>
             <td>
               {prettyMs(topTrack.track.durationMs, {
                 colonNotation: true,
@@ -74,7 +74,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, spotifyId }) => {
           <tr>
             <th>#</th>
             <th>Track</th>
-            <th>Album</th>
+            <th className={"optionalColumn"}>Album</th>
             <th>Song Duration</th>
             <th>Play Count</th>
           </tr>

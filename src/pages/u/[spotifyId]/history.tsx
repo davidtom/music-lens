@@ -44,7 +44,7 @@ const HistoryPage: React.FC<HistoryPageProps> = ({ spotifyId }) => {
                 {play.track.artists.map((a: any) => a.artist.name).join(",")}
               </p>
             </td>
-            <td>{play.track.album.name}</td>
+            <td className={"optionalColumn"}>{play.track.album.name}</td>
             <td>
               {prettyMs(play.track.durationMs, {
                 colonNotation: true,
@@ -66,7 +66,7 @@ const HistoryPage: React.FC<HistoryPageProps> = ({ spotifyId }) => {
           <tr>
             <th>#</th>
             <th>Track</th>
-            <th>Album</th>
+            <th className={"optionalColumn"}>Album</th>
             <th>Song Duration</th>
             <th>Played At</th>
           </tr>
