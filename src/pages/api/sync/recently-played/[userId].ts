@@ -107,7 +107,7 @@ export default async function handler(
       count,
     });
 
-    res.json({ count });
+    res.json({ count, userId: user.id });
   } catch (err) {
     // TODO: logger
     console.error(err);
