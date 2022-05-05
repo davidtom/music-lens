@@ -57,6 +57,11 @@ const Header: React.FC = () => {
                   <p>{"Profile"}</p>
                 </a>
               </Link>
+              <Link href={`/others`} passHref>
+                <a className={styles.navButton}>
+                  <p>{"Others"}</p>
+                </a>
+              </Link>
               <Link href={`/account`} passHref>
                 <a className={styles.navButton}>
                   <p>{"Account"}</p>
