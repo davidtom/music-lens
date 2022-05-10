@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { createUseStyles } from "react-jss";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -33,6 +34,32 @@ const UserNavBar: React.FC = ({ children }) => {
   const currentPath = asPath.split(spotifyId)[1];
 
   const { userData, error } = useUserData(spotifyId);
+  const { displayName, createdAtMs, totalPlays } = userData || {};
+
+  const { createdAtDate, daysSinceCreate } = useMemo(() => {
+    if (!createdAtMs) {
+      return {};
+    }
+
+    const createdAtDate = new Date(createdAtMs);
+
+    const now = new Date();
+    const msSinceCreate = Math.floor(now.getTime() - createdAtDate.getTime());
+    const daysSinceCreate = Math.floor(msSinceCreate / (1000 * 60 * 60 * 24));
+
+    return {
+      createdAtDate,
+      daysSinceCreate,
+    };
+  }, [createdAtMs]);
+
+  const playsPerDay = useMemo(() => {
+    if (!totalPlays || !daysSinceCreate) {
+      return null;
+    }
+
+    return Math.round(totalPlays / daysSinceCreate);
+  }, [totalPlays, daysSinceCreate]);
 
   if (error?.status === 404) {
     return <Custom404 type={"User"} />;
@@ -42,13 +69,19 @@ const UserNavBar: React.FC = ({ children }) => {
     <>
       <div className={styles.container}>
         <div>
-          <h2>{userData?.displayName}</h2>
-          {userData?.createdAtMs && (
-            <p>{`Joined: ${new Date(
-              userData?.createdAtMs
-            ).toLocaleString()}`}</p>
+          <h2>{displayName}</h2>
+          {createdAtDate && (
+            <p>
+              {`Joined: ${createdAtDate.toLocaleDateString()}`}
+              {daysSinceCreate && <span>{` ⸱ ${daysSinceCreate} days`} </span>}
+            </p>
           )}
-          {userData?.totalPlays && <p>{`Plays: ${userData.totalPlays}`}</p>}
+          {totalPlays && (
+            <p>
+              {`Plays: ${totalPlays}`}
+              {playsPerDay && <span> {` ⸱ ${playsPerDay} per day`}</span>}
+            </p>
+          )}
         </div>
         <div className={styles.navContainer}>
           <Link href={`/u/${spotifyId}`} passHref>
