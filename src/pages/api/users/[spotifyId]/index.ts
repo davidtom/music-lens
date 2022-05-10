@@ -7,6 +7,7 @@ import db from "lib/clients/db";
 export type UserData = {
   displayName: string;
   createdAtMs: number;
+  totalPlays: number;
 };
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -23,9 +24,22 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return;
   }
 
+  const totalPlaysQueryResult = await db.play.groupBy({
+    where: {
+      userId: user.id,
+    },
+    by: ["userId"],
+    _count: true,
+  });
+
+  // TODO: logger
+  console.log("totalPlays for user", totalPlaysQueryResult);
+  const { _count: totalPlays } = totalPlaysQueryResult[0];
+
   const userData: UserData = {
     displayName: user.displayName,
     createdAtMs: user.createdAt.getTime(),
+    totalPlays,
   };
 
   res.json(userData);

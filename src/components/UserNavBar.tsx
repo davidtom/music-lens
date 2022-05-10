@@ -48,6 +48,7 @@ const UserNavBar: React.FC = ({ children }) => {
               userData?.createdAtMs
             ).toLocaleString()}`}</p>
           )}
+          {userData?.totalPlays && <p>{`Plays: ${userData.totalPlays}`}</p>}
         </div>
         <div className={styles.navContainer}>
           <Link href={`/u/${spotifyId}`} passHref>
