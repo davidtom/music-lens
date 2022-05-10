@@ -19,7 +19,6 @@ export default class MyApp extends App {
   render(): JSX.Element {
     const { Component, pageProps } = this.props;
     return (
-      // TODO: check for polling config
       // https://github.com/vercel/next.js/blob/canary/examples/with-iron-session/pages/_app.tsx
       <SWRConfig
         value={{

@@ -11,6 +11,16 @@ const nextConfig = {
     API_SECRET: process.env.API_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
   },
+  rewrites: async () => [
+    {
+      destination: "https://cdn.splitbee.io/sb.js",
+      source: "/sb.js",
+    },
+    {
+      destination: "https://hive.splitbee.io/:slug",
+      source: "/sb-api/:slug",
+    },
+  ],
 };
 
 module.exports = nextConfig;

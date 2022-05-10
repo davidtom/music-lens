@@ -36,10 +36,14 @@ const Layout: React.FC = ({ children }) => {
     <div className={styles.container}>
       <Head>
         <title>Music Lense</title>
-        <meta name="description" content="TODO: describe this app" />
+        <meta
+          name="description"
+          content="View your music listening history, stats, and more"
+        />
         {/* TODO: new favicon */}
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
+        <script async data-api="/sb-api" src="/sb.js"></script>
       </Head>
       <Header />
       <main className={styles.main}>{children}</main>
