@@ -1,4 +1,3 @@
-// TODO: define a theme
 interface Theme {
   spacing: (factor: number) => number;
 }

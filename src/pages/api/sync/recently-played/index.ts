@@ -1,16 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-// import getConfig from "next/config";
+import getConfig from "next/config";
 
 import db from "lib/clients/db";
 
-// const API_SECRET = getConfig().serverRuntimeConfig.API_SECRET;
+const API_SECRET = getConfig().serverRuntimeConfig.API_SECRET;
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   // TODO: DRY
-  // if (req.headers["authorization"] !== `Bearer ${API_SECRET}`) {
-  //   res.status(403).end();
-  //   return;
-  // }
+  if (req.headers["authorization"] !== `Bearer ${API_SECRET}`) {
+    res.status(403).end();
+    return;
+  }
 
   const protocol = req.headers["x-forwarded-proto"] || "http";
   const baseUrl = req ? `${protocol}://${req.headers.host}` : "";
@@ -32,7 +32,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     console.log("Requesting for userId: ", userId);
     try {
       const response = await fetch(
-        `${baseUrl}/api/sync/recently-played/${userId}`
+        `${baseUrl}/api/sync/recently-played/${userId}`,
+        // TODO: DRY this up with other auth checking?
+        {
+          headers: { authorization: `Bearer ${API_SECRET}` },
+        }
       );
       const body = await response.json();
       // TODO: logger

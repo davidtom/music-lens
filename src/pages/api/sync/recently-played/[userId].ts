@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-// import getConfig from "next/config";
+import getConfig from "next/config";
 
 import client from "lib/clients/spotify";
 import { mapSpotifyPlayHistoryToUserPlayHistoryData } from "lib/util";
@@ -20,17 +20,17 @@ import db, {
 // TODO: review this project for more ideas: https://github.com/paulphys/nextjs-cron
 // TODO: should this be a POST?
 
-// const API_SECRET = getConfig().serverRuntimeConfig.API_SECRET;
+const API_SECRET = getConfig().serverRuntimeConfig.API_SECRET;
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   // TODO: DRY
-  // if (req.headers["authorization"] !== `Bearer ${API_SECRET}`) {
-  //   res.status(403).end();
-  //   return;
-  // }
+  if (req.headers["authorization"] !== `Bearer ${API_SECRET}`) {
+    res.status(403).end();
+    return;
+  }
 
   try {
     // Get the user associated with the request's userId param
@@ -44,7 +44,8 @@ export default async function handler(
     const user = await db.user.findFirst({ where: { id } });
 
     if (!user) {
-      throw new Error(`No user found for id ${id}`);
+      res.status(404).end();
+      return;
     }
 
     // Update user's access token
