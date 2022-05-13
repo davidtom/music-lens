@@ -24,7 +24,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return;
   }
 
-  const totalPlaysQueryResult = await db.play.groupBy({
+  const totalPlaysQueryResults = await db.play.groupBy({
     where: {
       userId: user.id,
     },
@@ -32,7 +32,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     _count: true,
   });
 
-  const { _count: totalPlays } = totalPlaysQueryResult[0];
+  const totalPlaysQueryResult = totalPlaysQueryResults[0];
+  const totalPlays = totalPlaysQueryResult?._count || 0;
 
   const userData: UserData = {
     displayName: user.displayName,

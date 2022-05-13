@@ -45,7 +45,8 @@ const UserNavBar: React.FC = ({ children }) => {
 
     const now = new Date();
     const msSinceCreate = Math.floor(now.getTime() - createdAtDate.getTime());
-    const daysSinceCreate = Math.floor(msSinceCreate / (1000 * 60 * 60 * 24));
+    // Use ceiling because for the first day a user sings up, this should be 1
+    const daysSinceCreate = Math.ceil(msSinceCreate / (1000 * 60 * 60 * 24));
 
     return {
       createdAtDate,
@@ -73,15 +74,16 @@ const UserNavBar: React.FC = ({ children }) => {
           {createdAtDate && (
             <p>
               {`Joined: ${createdAtDate.toLocaleDateString()}`}
-              {daysSinceCreate && <span>{` ⸱ ${daysSinceCreate} days`} </span>}
+              {daysSinceCreate &&
+                ` ⸱ ${daysSinceCreate} ${daysSinceCreate > 1 ? "days" : "day"}`}
             </p>
           )}
-          {totalPlays && (
+          {totalPlays ? (
             <p>
               {`Plays: ${totalPlays}`}
-              {playsPerDay && <span> {` ⸱ ${playsPerDay} per day`}</span>}
+              {playsPerDay && ` ⸱ ${playsPerDay} per day`}
             </p>
-          )}
+          ) : null}
         </div>
         <div className={styles.navContainer}>
           <Link href={`/u/${spotifyId}`} passHref>

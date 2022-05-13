@@ -31,11 +31,12 @@ async function handler(_: NextApiRequest, res: NextApiResponse) {
       }): Promise<UserWithPlaysPerDay> => {
         const now = new Date();
         const msSinceCreate = Math.floor(now.getTime() - createdAt.getTime());
-        const daysSinceCreate = Math.floor(
+        // Use ceiling because for the first day a user sings up, this should be 1
+        const daysSinceCreate = Math.ceil(
           msSinceCreate / (1000 * 60 * 60 * 24)
         );
 
-        const totalPlaysQueryResult = await db.play.groupBy({
+        const totalPlaysQueryResults = await db.play.groupBy({
           where: {
             userId: id,
           },
@@ -43,7 +44,8 @@ async function handler(_: NextApiRequest, res: NextApiResponse) {
           _count: true,
         });
 
-        const { _count: totalPlays } = totalPlaysQueryResult[0];
+        const totalPlaysQueryResult = totalPlaysQueryResults[0];
+        const totalPlays = totalPlaysQueryResult?._count || 0;
 
         const playsPerDay = Math.round(totalPlays / daysSinceCreate);
 
