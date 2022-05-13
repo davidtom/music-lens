@@ -8,16 +8,30 @@ const OthersPage: React.FC<OthersPageProps> = ({}) => {
 
   return (
     <div>
-      {users?.map((user) => {
-        return (
-          <Link key={user.id} href={`/u/${user.spotifyId}`} passHref>
-            {/* <a className={styles.navButton}> */}
-            <a>
-              <p>{user.displayName}</p>
-            </a>
-          </Link>
-        );
-      })}
+      <table>
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Plays Per Day</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users?.map((user) => {
+            return (
+              <tr key={user.id}>
+                <td>
+                  <Link href={`/u/${user.spotifyId}`} passHref>
+                    <a>
+                      <p>{user.displayName}</p>
+                    </a>
+                  </Link>
+                </td>
+                <td style={{ textAlign: "center" }}>{user.playsPerDay}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 };

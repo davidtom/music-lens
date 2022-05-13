@@ -32,8 +32,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     _count: true,
   });
 
-  // TODO: logger
-  console.log("totalPlays for user", totalPlaysQueryResult);
   const { _count: totalPlays } = totalPlaysQueryResult[0];
 
   const userData: UserData = {
