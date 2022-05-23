@@ -4,6 +4,7 @@ import prettyMs from "pretty-ms";
 
 import useUserPlayHistory from "lib/useUserPlayHistory";
 import UserNavBar from "components/UserNavBar";
+import Track from "../../../components/Track";
 
 /**
  * TODO: all /u/:spotifyId pages will probably need/want to use get serverSideProps to access the
@@ -39,10 +40,8 @@ const HistoryPage: React.FC<HistoryPageProps> = ({ spotifyId }) => {
           <tr key={i}>
             <td>{i + 1}</td>
             <td>
-              <p>{play.track.name}</p>
-              <p>
-                {play.track.artists.map((a: any) => a.artist.name).join(",")}
-              </p>
+              {/* FIXME: track cell? */}
+              <Track track={play.track} />
             </td>
             <td className={"optionalColumn"}>{play.track.album.name}</td>
             <td>

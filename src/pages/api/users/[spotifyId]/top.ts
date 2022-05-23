@@ -6,6 +6,7 @@ import db from "lib/clients/db";
 
 type TopTrack = {
   name: string;
+  spotifyId: string;
   durationMs: number;
   album: {
     name: string;
@@ -17,10 +18,12 @@ type TopTrack = {
   }[];
 };
 
-export type UserTopTracks = {
+export type UserTopTrack = {
   playCount: number;
   track: TopTrack;
-}[];
+};
+
+export type UserTopTracks = UserTopTrack[];
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const spotifyId = req.query.spotifyId;
@@ -31,6 +34,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   const user = await db.user.findFirst({ where: { spotifyId } });
 
+  // FIXME: is something still returning something that cant be parsed by json?
   if (!user) {
     res.status(404).end({});
     return;
@@ -63,6 +67,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     select: {
       id: true,
       name: true,
+      spotifyId: true,
       durationMs: true,
       album: {
         select: {

@@ -5,6 +5,7 @@ import { withSessionSsr, SessionUser } from "lib/session";
 import useUser from "lib/useUser";
 import useUserTopTracks from "lib/useUserTopTracks";
 import UserNavBar from "components/UserNavBar";
+import Track from "../../../components/Track";
 
 type ProfilePageProps = {
   spotifyId: string;
@@ -45,12 +46,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, spotifyId }) => {
           <tr key={i}>
             <td>{i + 1}</td>
             <td>
-              <p>{topTrack.track.name}</p>
-              <p>
-                {topTrack.track.artists
-                  .map((a: any) => a.artist.name)
-                  .join(",")}
-              </p>
+              <Track track={topTrack.track} />
             </td>
             <td className={"optionalColumn"}>{topTrack.track.album.name}</td>
             <td>

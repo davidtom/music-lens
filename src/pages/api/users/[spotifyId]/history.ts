@@ -4,10 +4,11 @@ import { withSessionApiRoute } from "lib/session";
 
 import db from "lib/clients/db";
 
-export type UserPlayHistory = {
+export type UserPlay = {
   playedAt: number;
   track: {
     name: string;
+    spotifyId: string;
     durationMs: number;
     album: {
       name: string;
@@ -18,7 +19,9 @@ export type UserPlayHistory = {
       };
     }[];
   };
-}[];
+};
+
+export type UserPlayHistory = UserPlay[];
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const spotifyId = req.query.spotifyId;
@@ -44,6 +47,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       track: {
         select: {
           name: true,
+          spotifyId: true,
           durationMs: true,
           album: {
             select: {
