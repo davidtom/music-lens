@@ -96,9 +96,7 @@ export default async function handler(
       mapSpotifyPlayHistoryToUserPlayHistoryData(items);
 
     // Sync recently played tracks to the database
-    for (const recentlyPlayedTrack of recentlyPlayedTracks) {
-      await addUserPlayHistoryData(user, recentlyPlayedTrack);
-    }
+    await addUserPlayHistoryData(user, recentlyPlayedTracks);
 
     const count = recentlyPlayedTracks.length;
     // TODO: logger
