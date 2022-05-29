@@ -43,94 +43,96 @@ export const addUserPlayHistoryData = async (
   user: User,
   userPlayHistoryData: UserPlayHistoryData[]
 ): Promise<void> => {
-  await prisma.$transaction(async (prisma): Promise<void> => {
-    for (const playData of userPlayHistoryData) {
-      const { artists, album, ...track } = playData;
+  // FIXME: this is breaking for some reason:
+  // https://www.google.com/search?q=Transaction+already+closed%3A+Transaction+is+no+longer+valid.+Last+state%3A+%27Expired%27&rlz=1C5CHFA_enES503ES503&oq=Transaction+already+closed%3A+Transaction+is+no+longer+valid.+Last+state%3A+%27Expired%27&aqs=chrome..69i57.150j0j7&sourceid=chrome&ie=UTF-8
+  // await prisma.$transaction(async (prisma): Promise<void> => {
+  for (const playData of userPlayHistoryData) {
+    const { artists, album, ...track } = playData;
 
-      // Album
-      const dbAlbum = await prisma.album.upsert({
+    // Album
+    const dbAlbum = await prisma.album.upsert({
+      create: {
+        imageUrl: album.imageUrl,
+        name: album.name,
+        spotifyId: album.spotifyId,
+      },
+      update: {
+        imageUrl: album.imageUrl,
+        name: album.name,
+      },
+      where: {
+        spotifyId: album.spotifyId,
+      },
+    });
+
+    // Track
+    const dbTrack = await prisma.track.upsert({
+      create: {
+        albumId: dbAlbum.id,
+        durationMs: track.durationMs,
+        name: track.name,
+        spotifyId: track.spotifyId,
+      },
+      update: {
+        durationMs: track.durationMs,
+        name: track.name,
+      },
+      where: {
+        spotifyId: track.spotifyId,
+      },
+    });
+
+    // Artists
+    const dbArtists: Artist[] = [];
+    for (const artist of artists) {
+      const a = await prisma.artist.upsert({
         create: {
-          imageUrl: album.imageUrl,
-          name: album.name,
-          spotifyId: album.spotifyId,
+          name: artist.name,
+          spotifyId: artist.spotifyId,
         },
         update: {
-          imageUrl: album.imageUrl,
-          name: album.name,
+          name: artist.name,
         },
         where: {
-          spotifyId: album.spotifyId,
+          spotifyId: artist.spotifyId,
         },
       });
+      dbArtists.push(a);
+    }
 
-      // Track
-      const dbTrack = await prisma.track.upsert({
-        create: {
-          albumId: dbAlbum.id,
-          durationMs: track.durationMs,
-          name: track.name,
-          spotifyId: track.spotifyId,
-        },
-        update: {
-          durationMs: track.durationMs,
-          name: track.name,
-        },
-        where: {
-          spotifyId: track.spotifyId,
-        },
-      });
-
-      // Artists
-      const dbArtists: Artist[] = [];
-      for (const artist of artists) {
-        const a = await prisma.artist.upsert({
-          create: {
-            name: artist.name,
-            spotifyId: artist.spotifyId,
-          },
-          update: {
-            name: artist.name,
-          },
-          where: {
-            spotifyId: artist.spotifyId,
-          },
-        });
-        dbArtists.push(a);
-      }
-
-      // Union: Play
-      await prisma.play.upsert({
-        create: {
+    // Union: Play
+    await prisma.play.upsert({
+      create: {
+        playedAt: track.playedAt,
+        trackId: dbTrack.id,
+        userId: user.id,
+      },
+      update: {},
+      where: {
+        userId_trackId_playedAt: {
           playedAt: track.playedAt,
           trackId: dbTrack.id,
           userId: user.id,
         },
+      },
+    });
+
+    // Union ArtistTrack
+    for (const dbArtist of dbArtists) {
+      await prisma.artistTrack.upsert({
+        create: {
+          artistId: dbArtist.id,
+          trackId: dbTrack.id,
+        },
         update: {},
         where: {
-          userId_trackId_playedAt: {
-            playedAt: track.playedAt,
-            trackId: dbTrack.id,
-            userId: user.id,
-          },
-        },
-      });
-
-      // Union ArtistTrack
-      for (const dbArtist of dbArtists) {
-        await prisma.artistTrack.upsert({
-          create: {
+          artistId_trackId: {
             artistId: dbArtist.id,
             trackId: dbTrack.id,
           },
-          update: {},
-          where: {
-            artistId_trackId: {
-              artistId: dbArtist.id,
-              trackId: dbTrack.id,
-            },
-          },
-        });
-      }
+        },
+      });
     }
-  });
+  }
+  // });
 };
