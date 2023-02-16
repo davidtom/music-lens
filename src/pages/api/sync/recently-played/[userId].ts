@@ -18,7 +18,7 @@ import db, {
 
 // TODO: need to auth this - just check a random string
 // TODO: review this project for more ideas: https://github.com/paulphys/nextjs-cron
-// TODO: should this be a POST?
+// TODO: this should be a POST
 
 const API_SECRET = getConfig().serverRuntimeConfig.API_SECRET;
 
@@ -95,8 +95,16 @@ export default async function handler(
     const recentlyPlayedTracks: UserPlayHistoryData[] =
       mapSpotifyPlayHistoryToUserPlayHistoryData(items);
 
+    // Tracks are sorted from most recently played to oldest, but we want to sync from oldest first
+    // so if we fail we pick up at the right spot
+    const sortedRecentlyPlayedTracks = recentlyPlayedTracks.sort(
+      sortByPlayedAtAscending
+    );
+
     // Sync recently played tracks to the database
-    await addUserPlayHistoryData(user, recentlyPlayedTracks);
+    for (const userPlayHistoryData of sortedRecentlyPlayedTracks) {
+      await addUserPlayHistoryData(user.id, userPlayHistoryData);
+    }
 
     const count = recentlyPlayedTracks.length;
     // TODO: logger
@@ -112,4 +120,20 @@ export default async function handler(
     console.error(err);
     res.status(500).end();
   }
+}
+
+/****************************************
+ * Helper Methods
+ ***************************************/
+function sortByPlayedAtAscending(
+  a: UserPlayHistoryData,
+  b: UserPlayHistoryData
+): number {
+  if (a.playedAt < b.playedAt) {
+    return -1;
+  }
+  if (a.playedAt > b.playedAt) {
+    return 1;
+  }
+  return 0;
 }

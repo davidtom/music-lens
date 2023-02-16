@@ -1,4 +1,4 @@
-import { PrismaClient, User, Artist } from "@prisma/client";
+import { PrismaClient, Artist } from "@prisma/client";
 import getConfig from "next/config";
 
 export type {
@@ -40,17 +40,14 @@ export type UserPlayHistoryData = {
 };
 
 export const addUserPlayHistoryData = async (
-  user: User,
-  userPlayHistoryData: UserPlayHistoryData[]
+  userId: number,
+  userPlayHistoryData: UserPlayHistoryData
 ): Promise<void> => {
-  // FIXME: this is breaking for some reason:
-  // https://www.google.com/search?q=Transaction+already+closed%3A+Transaction+is+no+longer+valid.+Last+state%3A+%27Expired%27&rlz=1C5CHFA_enES503ES503&oq=Transaction+already+closed%3A+Transaction+is+no+longer+valid.+Last+state%3A+%27Expired%27&aqs=chrome..69i57.150j0j7&sourceid=chrome&ie=UTF-8
-  // await prisma.$transaction(async (prisma): Promise<void> => {
-  for (const playData of userPlayHistoryData) {
-    const { artists, album, ...track } = playData;
+  const { artists, album, ...track } = userPlayHistoryData;
 
+  await prisma.$transaction(async (trx) => {
     // Album
-    const dbAlbum = await prisma.album.upsert({
+    const dbAlbum = await trx.album.upsert({
       create: {
         imageUrl: album.imageUrl,
         name: album.name,
@@ -66,7 +63,7 @@ export const addUserPlayHistoryData = async (
     });
 
     // Track
-    const dbTrack = await prisma.track.upsert({
+    const dbTrack = await trx.track.upsert({
       create: {
         albumId: dbAlbum.id,
         durationMs: track.durationMs,
@@ -85,7 +82,7 @@ export const addUserPlayHistoryData = async (
     // Artists
     const dbArtists: Artist[] = [];
     for (const artist of artists) {
-      const a = await prisma.artist.upsert({
+      const a = await trx.artist.upsert({
         create: {
           name: artist.name,
           spotifyId: artist.spotifyId,
@@ -101,25 +98,25 @@ export const addUserPlayHistoryData = async (
     }
 
     // Union: Play
-    await prisma.play.upsert({
+    await trx.play.upsert({
       create: {
         playedAt: track.playedAt,
         trackId: dbTrack.id,
-        userId: user.id,
+        userId,
       },
       update: {},
       where: {
         userId_trackId_playedAt: {
           playedAt: track.playedAt,
           trackId: dbTrack.id,
-          userId: user.id,
+          userId,
         },
       },
     });
 
     // Union ArtistTrack
     for (const dbArtist of dbArtists) {
-      await prisma.artistTrack.upsert({
+      await trx.artistTrack.upsert({
         create: {
           artistId: dbArtist.id,
           trackId: dbTrack.id,
@@ -133,6 +130,5 @@ export const addUserPlayHistoryData = async (
         },
       });
     }
-  }
-  // });
+  });
 };
