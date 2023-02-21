@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { createUseStyles } from "react-jss";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -34,37 +33,14 @@ const UserNavBar: React.FC = ({ children }) => {
   const currentPath = asPath.split(spotifyId)[1];
 
   const { userData, error } = useUserData(spotifyId);
-  const { displayName, createdAtMs, totalPlays } = userData || {};
-
-  const { createdAtDate, daysSinceCreate } = useMemo(() => {
-    if (!createdAtMs) {
-      return {};
-    }
-
-    const createdAtDate = new Date(createdAtMs);
-
-    const now = new Date();
-    const msSinceCreate = Math.floor(now.getTime() - createdAtDate.getTime());
-    // Use ceiling because for the first day a user sings up, this should be 1
-    const daysSinceCreate = Math.ceil(msSinceCreate / (1000 * 60 * 60 * 24));
-
-    return {
-      createdAtDate,
-      daysSinceCreate,
-    };
-  }, [createdAtMs]);
-
-  const playsPerDay = useMemo(() => {
-    if (!totalPlays || !daysSinceCreate) {
-      return null;
-    }
-
-    return Math.round(totalPlays / daysSinceCreate);
-  }, [totalPlays, daysSinceCreate]);
 
   if (error?.status === 404) {
     return <Custom404 type={"User"} />;
   }
+
+  const { displayName, createdAt, daysSinceCreation, totalPlays, playsPerDay } =
+    userData || {};
+  const createdAtDate = createdAt && new Date(createdAt);
 
   return (
     <>
@@ -74,8 +50,10 @@ const UserNavBar: React.FC = ({ children }) => {
           {createdAtDate && (
             <p>
               {`Joined: ${createdAtDate.toLocaleDateString()}`}
-              {daysSinceCreate &&
-                ` ⸱ ${daysSinceCreate} ${daysSinceCreate > 1 ? "days" : "day"}`}
+              {daysSinceCreation &&
+                ` ⸱ ${daysSinceCreation} ${
+                  daysSinceCreation > 1 ? "days" : "day"
+                }`}
             </p>
           )}
           {totalPlays ? (

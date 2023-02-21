@@ -2,12 +2,14 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { withSessionApiRoute } from "lib/session";
 
-import db from "lib/clients/db";
+import db, { User } from "lib/clients/db";
 
 export type UserData = {
-  displayName: string;
-  createdAtMs: number;
+  displayName: User["displayName"];
+  createdAt: string;
+  daysSinceCreation: number;
   totalPlays: number;
+  playsPerDay: number;
 };
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -17,29 +19,21 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     throw new Error(`Invalid spotifyId: ${spotifyId}`);
   }
 
-  const user = await db.user.findFirst({ where: { spotifyId } });
+  const result = await db.$queryRaw<UserData[]>`
+  SELECT *, ROUND("totalPlays" / "daysSinceCreation") as "playsPerDay" FROM (
+    SELECT
+      u."displayName",
+      u."createdAt",
+      DATE_PART('day', (now()AT TIME ZONE 'UTC') - u."createdAt") AS "daysSinceCreation",
+	  (SELECT "totalPlays" FROM (SELECT "userId", COUNT(*) as "totalPlays" FROM "Play" WHERE "userId"=u.id GROUP BY "userId") as plays) as "totalPlays"
+    FROM "User" as u WHERE "spotifyId"=${spotifyId}) as subq;
+  `;
+  const userData = result[0];
 
-  if (!user) {
+  if (!userData) {
     res.status(404).send({});
     return;
   }
-
-  const totalPlaysQueryResults = await db.play.groupBy({
-    where: {
-      userId: user.id,
-    },
-    by: ["userId"],
-    _count: true,
-  });
-
-  const totalPlaysQueryResult = totalPlaysQueryResults[0];
-  const totalPlays = totalPlaysQueryResult?._count || 0;
-
-  const userData: UserData = {
-    displayName: user.displayName,
-    createdAtMs: user.createdAt.getTime(),
-    totalPlays,
-  };
 
   res.json(userData);
 }
