@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import db, { User } from "lib/clients/db";
 
-type UserWithPlaysPerDay = Pick<User, "displayName" | "spotifyId"> & {
+type UserWithPlaysPerDay = Pick<User, "id" | "displayName" | "spotifyId"> & {
   playsPerDay: number;
 };
 
@@ -10,7 +10,7 @@ export type Users = UserWithPlaysPerDay[];
 
 async function handler(_: NextApiRequest, res: NextApiResponse) {
   const results = await db.$queryRaw<Users>`
-    SELECT "displayName", "spotifyId", ROUND("totalPlays" / "daysSinceCreation") as "playsPerDay"
+    SELECT "id", "displayName", "spotifyId", ROUND("totalPlays" / "daysSinceCreation") as "playsPerDay"
     FROM (
       SELECT
         u.id,
