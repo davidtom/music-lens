@@ -18,7 +18,7 @@ const OthersPage: React.FC<OthersPageProps> = ({}) => {
         <tbody>
           {users?.map((user) => {
             return (
-              <tr key={user.id}>
+              <tr key={user.spotifyId}>
                 <td>
                   <Link href={`/u/${user.spotifyId}`} passHref>
                     <a>
