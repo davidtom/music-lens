@@ -28,8 +28,8 @@ export default async function handler(
 ) {
   // TODO: DRY
   if (req.headers["authorization"] !== `Bearer ${API_SECRET}`) {
-    res.status(403).json({ auth: req.headers["authorization"], fuck: "off" });
-    // res.status(403).end();
+    console.error(req.headers);
+    res.status(403).end();
     return;
   }
 
