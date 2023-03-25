@@ -19,7 +19,7 @@ async function handler(_: NextApiRequest, res: NextApiResponse) {
         DATE_PART('day', (now()AT TIME ZONE 'UTC') - u."createdAt") AS "daysSinceCreation",
         p."totalPlays"
       FROM "User" as u
-      JOIN (SELECT "userId", COUNT(*) as "totalPlays" FROM "Play" GROUP BY "userId") as p
+      LEFT JOIN (SELECT "userId", COUNT(*) as "totalPlays" FROM "Play" GROUP BY "userId") as p
       ON u.id=p."userId"
     ) as subq
     ORDER BY "playsPerDay" DESC;
