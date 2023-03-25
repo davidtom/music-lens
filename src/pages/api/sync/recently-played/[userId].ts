@@ -28,7 +28,6 @@ export default async function handler(
 ) {
   // TODO: DRY
   if (req.headers["authorization"] !== `Bearer ${API_SECRET}`) {
-    console.error(req.headers);
     res.status(403).end();
     return;
   }
