@@ -16,7 +16,7 @@ async function handler(_: NextApiRequest, res: NextApiResponse) {
         u.id,
         u."displayName",
         u."spotifyId",
-        DATE_PART('day', (now()AT TIME ZONE 'UTC') - u."createdAt") AS "daysSinceCreation",
+        COALESCE(NULLIF(DATE_PART('day', (now()AT TIME ZONE 'UTC') - u."createdAt"), 0), 1) AS "daysSinceCreation",
         p."totalPlays"
       FROM "User" as u
       LEFT JOIN (SELECT "userId", COUNT(*) as "totalPlays" FROM "Play" GROUP BY "userId") as p
