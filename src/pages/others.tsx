@@ -26,7 +26,7 @@ const OthersPage: React.FC<OthersPageProps> = ({}) => {
                     </a>
                   </Link>
                 </td>
-                <td style={{ textAlign: "center" }}>{user.playsPerDay}</td>
+                <td style={{ textAlign: "center" }}>{user.playsPerDay || 0}</td>
               </tr>
             );
           })}
