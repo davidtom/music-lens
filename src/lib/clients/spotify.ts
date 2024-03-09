@@ -16,7 +16,7 @@ export class SpotifyClient {
   }
 
   public getAuthorizeUrl(): string {
-    const state = crypto.randomBytes(8).toString("hex");
+    const state = crypto.randomBytes(16).toString("hex");
     const showLoginDialog =
       getConfig().serverRuntimeConfig.SPOTIFY_SHOW_LOGIN_DIALOG;
     return this.client.createAuthorizeURL(scopes, state, showLoginDialog);
