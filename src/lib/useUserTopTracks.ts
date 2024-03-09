@@ -1,6 +1,6 @@
 import useSWR from "swr";
 
-import { UserTopTracks } from "pages/api/users/[spotifyId]/top";
+import { TopTracks } from "pages/api/users/[spotifyId]/top";
 import { FetchError } from "lib/fetchJson";
 
 export default function useUserTopTracks(spotifyId: string) {
@@ -8,7 +8,7 @@ export default function useUserTopTracks(spotifyId: string) {
     data: userTopTracks,
     mutate: mutateUserTopTracks,
     error,
-  } = useSWR<UserTopTracks, FetchError>(`/api/users/${spotifyId}/top`);
+  } = useSWR<TopTracks, FetchError>(`/api/users/${spotifyId}/top`);
 
   return { userTopTracks, mutateUserTopTracks, error };
 }

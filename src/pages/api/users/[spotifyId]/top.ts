@@ -4,26 +4,16 @@ import { withSessionApiRoute } from "lib/session";
 
 import db from "lib/clients/db";
 
-type TopTrack = {
+export type TopTrack = {
   name: string;
   spotifyId: string;
   durationMs: number;
-  album: {
-    name: string;
-  };
-  artists: {
-    artist: {
-      name: string;
-    };
-  }[];
-};
-
-export type UserTopTrack = {
+  artistNames: string[];
+  albumName: string;
   playCount: number;
-  track: TopTrack;
+  lastPlayedAt: Date;
 };
-
-export type UserTopTracks = UserTopTrack[];
+export type TopTracks = TopTrack[];
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const spotifyId = req.query.spotifyId;
@@ -34,77 +24,36 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   const user = await db.user.findFirst({ where: { spotifyId } });
 
-  // FIXME: is something still returning something that cant be parsed by json?
   if (!user) {
     res.status(404).end({});
     return;
   }
 
-  const topTrackIdsByPlayCount = await db.play.groupBy({
-    where: {
-      userId: user.id,
-    },
-    by: ["trackId"],
-    _count: true,
-    orderBy: {
-      _count: {
-        trackId: "desc",
-      },
-    },
-    take: 100,
-  });
+  const topTracks = await db.$queryRaw<TopTrack[]>`
+    WITH "topTracks" AS (
+      SELECT "trackId", COUNT(*) as count, MAX(p."playedAt") as "lastPlayedAt"
+      FROM "Play" as p
+      WHERE "userId"=${user.id}
+      -- TODO: implement date filtering
+      -- 	AND "playedAt" >= '2024-02-01'::timestamp
+      -- 	do I need an equal sign on both sides of this or just one?
+      -- 	AND "playedAt" > '2023-01-01'::timestamp
+      GROUP BY "trackId"
+      ORDER BY count DESC
+    )
 
-  const topTrackIds = topTrackIdsByPlayCount.map(
-    (topTrack) => topTrack.trackId
-  );
+    SELECT t.name, t."spotifyId", t."durationMs", array_agg(art.name) as "artistNames", alb.name as "albumName", tt.count as "playCount", tt."lastPlayedAt"
+    FROM "topTracks" as tt
+    LEFT JOIN "Track" as t ON tt."trackId"=t.id
+    LEFT JOIN "Album" as alb ON t."albumId"=alb.id
+    LEFT JOIN "ArtistTrack" as at ON t.id=at."trackId"
+    LEFT JOIN "Artist" as art ON at."artistId"=art.id
+    GROUP BY t.name, t."spotifyId", t."durationMs", alb.name, tt.count, tt."lastPlayedAt"
+    ORDER BY tt.count DESC, tt."lastPlayedAt" DESC
+    LIMIT 100; 
+  `;
 
-  const topTracks = await db.track.findMany({
-    where: {
-      id: {
-        in: topTrackIds,
-      },
-    },
-    select: {
-      id: true,
-      name: true,
-      spotifyId: true,
-      durationMs: true,
-      album: {
-        select: {
-          name: true,
-        },
-      },
-      artists: {
-        select: {
-          artist: {
-            select: {
-              name: true,
-            },
-          },
-        },
-      },
-    },
-  });
-
-  // TODO: optimize this, ideally fully with sql
-  const topTracksById: { [trackId: string]: TopTrack } = topTracks.reduce(
-    (data, item) => {
-      return {
-        ...data,
-        [item.id]: item,
-      };
-    },
-    {}
-  );
-
-  const topTracksWithPlayCount: UserTopTracks = topTrackIdsByPlayCount.map(
-    ({ trackId, _count }) => ({
-      track: topTracksById[trackId],
-      playCount: _count,
-    })
-  );
-
-  res.json(topTracksWithPlayCount);
+  res.json(topTracks);
 }
 
 export default withSessionApiRoute(handler);

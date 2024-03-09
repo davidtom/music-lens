@@ -1,22 +1,37 @@
 import Link from "next/link";
 
-import { UserPlay } from "../pages/api/users/[spotifyId]/history";
-
 type TrackProps = {
-  track: UserPlay["track"];
+  name: string;
+  spotifyId: string;
+  artistNames: string[];
 };
 
-const Track: React.FC<TrackProps> = ({ track }) => {
+const Track: React.FC<TrackProps> = ({ name, spotifyId, artistNames }) => {
   return (
     <>
-      <Link href={`https://open.spotify.com/track/${track.spotifyId}`} passHref>
+      <Link href={`https://open.spotify.com/track/${spotifyId}`} passHref>
         <a target="blank">
-          <p>{track.name}</p>
+          <p>{name}</p>
         </a>
       </Link>
-      <p>{track.artists.map((a: any) => a.artist.name).join(",")}</p>
+      <p>{artistNames.join(",")}</p>
     </>
   );
+
+  // TODO: link to artist page
+  // <p>
+  //   {track.artists
+  //     .map((a: Artist) => (
+  //       <Link
+  //         key={a.id}
+  //         href={`https://open.spotify.com/artist/${"butt"}`}
+  //         passHref
+  //       >
+  //         {a.artist.name}
+  //       </Link>
+  //     ))
+  //     .join(",")}
+  // </p>
 };
 
 export default Track;

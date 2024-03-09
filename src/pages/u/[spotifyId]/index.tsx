@@ -41,24 +41,33 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, spotifyId }) => {
 
   const topTracks = useMemo(
     () =>
-      userTopTracks?.map((topTrack, i: number) => {
-        return (
-          <tr key={i}>
-            <td>{i + 1}</td>
-            <td>
-              <Track track={topTrack.track} />
-            </td>
-            <td className={"optionalColumn"}>{topTrack.track.album.name}</td>
-            <td>
-              {prettyMs(topTrack.track.durationMs, {
-                colonNotation: true,
-                secondsDecimalDigits: 0,
-              })}
-            </td>
-            <td>{topTrack.playCount}</td>
-          </tr>
-        );
-      }),
+      userTopTracks?.map(
+        (
+          { name, spotifyId, artistNames, albumName, durationMs, playCount },
+          i: number
+        ) => {
+          return (
+            <tr key={spotifyId}>
+              <td>{i + 1}</td>
+              <td>
+                <Track
+                  name={name}
+                  spotifyId={spotifyId}
+                  artistNames={artistNames}
+                />
+              </td>
+              <td className={"optionalColumn"}>{albumName}</td>
+              <td>
+                {prettyMs(durationMs, {
+                  colonNotation: true,
+                  secondsDecimalDigits: 0,
+                })}
+              </td>
+              <td>{playCount}</td>
+            </tr>
+          );
+        }
+      ),
     [userTopTracks]
   );
 
