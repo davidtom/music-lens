@@ -10,7 +10,7 @@ export type TrackPlay = {
   durationMs: number;
   artistNames: string[];
   albumName: string;
-  playedAt: number;
+  playedAt: string;
 };
 
 export type TrackPlays = TrackPlay[];
@@ -30,7 +30,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   const trackPlays = await db.$queryRaw<TrackPlays>`
-    SELECT t.name, t."spotifyId", t."durationMs", array_agg(art.name) as "artistNames", alb.name as "albumName", EXTRACT(epoch FROM p."playedAt")::BIGINT as "playedAt"
+    SELECT t.name, t."spotifyId", t."durationMs", array_agg(art.name) as "artistNames", alb.name as "albumName", p."playedAt"
     FROM "Track" as t
     LEFT JOIN "Play" as p ON t.id=p."trackId"
     LEFT JOIN "Album" as alb ON t."albumId"=alb.id

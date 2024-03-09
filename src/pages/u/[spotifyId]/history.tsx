@@ -35,7 +35,7 @@ const HistoryPage: React.FC<HistoryPageProps> = ({ spotifyId }) => {
   const playHistory = useMemo(
     () =>
       userPlayHistory?.map((trackPlay, i: number) => {
-        const playedAt = new Date(trackPlay.playedAt * 1000).toLocaleString();
+        const playedAt = new Date(trackPlay.playedAt).toLocaleString();
         return (
           <tr key={i}>
             <td>{i + 1}</td>
