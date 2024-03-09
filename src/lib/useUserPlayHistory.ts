@@ -1,6 +1,6 @@
 import useSWR from "swr";
 
-import { UserPlayHistory } from "pages/api/users/[spotifyId]/history";
+import { TrackPlays } from "pages/api/users/[spotifyId]/history";
 import { FetchError } from "lib/fetchJson";
 
 export default function useUserPlayHistory(spotifyId: string) {
@@ -8,7 +8,7 @@ export default function useUserPlayHistory(spotifyId: string) {
     data: userPlayHistory,
     mutate: mutateUserPlayHistory,
     error,
-  } = useSWR<UserPlayHistory, FetchError>(`/api/users/${spotifyId}/history`);
+  } = useSWR<TrackPlays, FetchError>(`/api/users/${spotifyId}/history`);
 
   return { userPlayHistory, mutateUserPlayHistory, error };
 }

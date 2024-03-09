@@ -34,23 +34,21 @@ const HistoryPage: React.FC<HistoryPageProps> = ({ spotifyId }) => {
 
   const playHistory = useMemo(
     () =>
-      userPlayHistory?.map((play, i: number) => {
-        const playedAt = new Date(play.playedAt).toLocaleString();
+      userPlayHistory?.map((trackPlay, i: number) => {
+        const playedAt = new Date(trackPlay.playedAt).toLocaleString();
         return (
           <tr key={i}>
             <td>{i + 1}</td>
             <td>
               <Track
-                name={play.track.name}
-                artistNames={play.track.artists.map(
-                  ({ artist }) => artist.name
-                )}
-                spotifyId={play.track.spotifyId}
+                name={trackPlay.name}
+                artistNames={trackPlay.artistNames}
+                spotifyId={trackPlay.spotifyId}
               />
             </td>
-            <td className={"optionalColumn"}>{play.track.album.name}</td>
+            <td className={"optionalColumn"}>{trackPlay.albumName}</td>
             <td>
-              {prettyMs(play.track.durationMs, {
+              {prettyMs(trackPlay.durationMs, {
                 colonNotation: true,
                 secondsDecimalDigits: 0,
               })}

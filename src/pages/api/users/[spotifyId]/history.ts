@@ -4,24 +4,16 @@ import { withSessionApiRoute } from "lib/session";
 
 import db from "lib/clients/db";
 
-export type UserPlay = {
+export type TrackPlay = {
+  name: string;
+  spotifyId: string;
+  durationMs: number;
+  albumName: string;
+  artistNames: string[];
   playedAt: number;
-  track: {
-    name: string;
-    spotifyId: string;
-    durationMs: number;
-    album: {
-      name: string;
-    };
-    artists: {
-      artist: {
-        name: string;
-      };
-    }[];
-  };
 };
 
-export type UserPlayHistory = UserPlay[];
+export type TrackPlays = TrackPlay[];
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const spotifyId = req.query.spotifyId;
@@ -37,8 +29,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return;
   }
 
-  // TODO: this errored recently from having too many clients/connections? look into that
-  const history = await db.play.findMany({
+  const trackPlaysRaw = await db.play.findMany({
     orderBy: {
       playedAt: "desc",
     },
@@ -72,12 +63,16 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     take: 100,
   });
 
-  const userPlayHistoryFormatted: UserPlayHistory = history.map((play) => ({
-    ...play,
-    playedAt: play.playedAt.getTime(),
+  const trackPlays: TrackPlays = trackPlaysRaw.map(({ track, playedAt }) => ({
+    name: track.name,
+    spotifyId: track.spotifyId,
+    durationMs: track.durationMs,
+    albumName: track.album.name,
+    artistNames: track.artists.map(({ artist }) => artist.name),
+    playedAt: playedAt.getTime(),
   }));
 
-  res.json(userPlayHistoryFormatted);
+  res.json(trackPlays);
 }
 
 export default withSessionApiRoute(handler);
