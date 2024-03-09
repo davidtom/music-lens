@@ -8,8 +8,8 @@ export type TrackPlay = {
   name: string;
   spotifyId: string;
   durationMs: number;
-  albumName: string;
   artistNames: string[];
+  albumName: string;
   playedAt: number;
 };
 
@@ -29,48 +29,18 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return;
   }
 
-  const trackPlaysRaw = await db.play.findMany({
-    orderBy: {
-      playedAt: "desc",
-    },
-    select: {
-      playedAt: true,
-      track: {
-        select: {
-          name: true,
-          spotifyId: true,
-          durationMs: true,
-          album: {
-            select: {
-              name: true,
-            },
-          },
-          artists: {
-            select: {
-              artist: {
-                select: {
-                  name: true,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    where: {
-      userId: user.id,
-    },
-    take: 100,
-  });
-
-  const trackPlays: TrackPlays = trackPlaysRaw.map(({ track, playedAt }) => ({
-    name: track.name,
-    spotifyId: track.spotifyId,
-    durationMs: track.durationMs,
-    albumName: track.album.name,
-    artistNames: track.artists.map(({ artist }) => artist.name),
-    playedAt: playedAt.getTime(),
-  }));
+  const trackPlays = await db.$queryRaw<TrackPlays>`
+    SELECT t.name, t."spotifyId", t."durationMs", array_agg(art.name) as "artistNames", alb.name as "albumName", EXTRACT(epoch FROM p."playedAt")::BIGINT as "playedAt"
+    FROM "Track" as t
+    LEFT JOIN "Play" as p ON t.id=p."trackId"
+    LEFT JOIN "Album" as alb ON t."albumId"=alb.id
+    LEFT JOIN "ArtistTrack" as at ON t.id=at."trackId"
+    LEFT JOIN "Artist" as art on at."artistId"=art.id
+    GROUP BY t.name, t."spotifyId", t."durationMs", alb.name, p."playedAt", p."userId"
+    HAVING p."userId"=${user.id}
+    ORDER BY p."playedAt" DESC
+    LIMIT 100;
+  `;
 
   res.json(trackPlays);
 }

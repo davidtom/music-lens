@@ -11,7 +11,7 @@ export type TopTrack = {
   artistNames: string[];
   albumName: string;
   playCount: number;
-  lastPlayedAt: Date;
+  lastPlayedAt: string;
 };
 export type TopTracks = TopTrack[];
 
