@@ -13,7 +13,9 @@ export type {
 const prisma = new PrismaClient({
   datasources: {
     db: {
-      url: getConfig().serverRuntimeConfig.DATABASE_URL,
+      url:
+        getConfig().serverRuntimeConfig.DATABASE_PRIVATE_URL ||
+        getConfig().serverRuntimeConfig.DATABASE_URL,
     },
   },
 });
