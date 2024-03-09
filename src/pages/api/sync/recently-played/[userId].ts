@@ -26,7 +26,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // TODO: DRY
+  // TODO: DRY - API SECRET CHECK
   if (req.headers["authorization"] !== `Bearer ${API_SECRET}`) {
     res.status(403).end();
     return;
