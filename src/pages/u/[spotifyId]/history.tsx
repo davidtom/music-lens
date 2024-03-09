@@ -40,8 +40,13 @@ const HistoryPage: React.FC<HistoryPageProps> = ({ spotifyId }) => {
           <tr key={i}>
             <td>{i + 1}</td>
             <td>
-              {/* FIXME: track cell? */}
-              <Track track={play.track} />
+              <Track
+                name={play.track.name}
+                artistNames={play.track.artists.map(
+                  ({ artist }) => artist.name
+                )}
+                spotifyId={play.track.spotifyId}
+              />
             </td>
             <td className={"optionalColumn"}>{play.track.album.name}</td>
             <td>
