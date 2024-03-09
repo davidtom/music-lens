@@ -11,6 +11,8 @@ export class SpotifyClient {
     this.client = new SpotifyWebAPI({
       clientId: getConfig().serverRuntimeConfig.SPOTIFY_CLIENT_ID,
       clientSecret: getConfig().serverRuntimeConfig.SPOTIFY_CLIENT_SECRET,
+      // TODO: can avoid needing to use the full canonical URL here if I follow
+      // this proxy advice: https://developer.spotify.com/documentation/web-playback-sdk/howtos/web-app-player#:~:text=Proxying%20Backend%20Requests
       redirectUri: getConfig().serverRuntimeConfig.SPOTIFY_REDIRECT_URI,
     });
   }

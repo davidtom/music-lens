@@ -8,20 +8,9 @@ import db, {
   UserPlayHistoryData,
 } from "lib/clients/db";
 
-/**
- * TODO: Idea for sync records table:
- * - capture sync time and success true/false
- * - run some process that deletes old TRUE records?
- *    only ever capture sync failures?
- *    probably at least want last successful sync time
- */
-
-// TODO: need to auth this - just check a random string
-// TODO: review this project for more ideas: https://github.com/paulphys/nextjs-cron
-// TODO: this should be a POST
-
 const API_SECRET = getConfig().serverRuntimeConfig.API_SECRET;
 
+// TODO: this should be a POST
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -67,7 +56,7 @@ export default async function handler(
     });
 
     // Get the last play for the user so we can query recent plays after that time
-    // TODO: DRY this up with code we use in the user profile?
+    // TODO: good target for an index?
     const mostRecentPlay = await db.play.findFirst({
       orderBy: {
         playedAt: "desc",

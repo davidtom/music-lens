@@ -47,6 +47,7 @@ const UserNavBar: React.FC = ({ children }) => {
       <div className={styles.container}>
         <div>
           <h2>{displayName}</h2>
+          {/* TODO: this doesnt display at all for users that just joined */}
           {createdAtDate && (
             <p>
               {`Joined: ${createdAtDate.toLocaleDateString()}`}
