@@ -43,7 +43,15 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, spotifyId }) => {
     () =>
       userTopTracks?.map(
         (
-          { name, spotifyId, artistNames, albumName, durationMs, playCount },
+          {
+            name,
+            spotifyId,
+            artistNames,
+            albumName,
+            durationMs,
+            playCount,
+            lastPlayedAt,
+          },
           i: number
         ) => {
           return (
@@ -64,6 +72,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, spotifyId }) => {
                 })}
               </td>
               <td>{playCount}</td>
+              <td>{new Date(lastPlayedAt).toLocaleString()}</td>
             </tr>
           );
         }
@@ -80,8 +89,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, spotifyId }) => {
             <th>#</th>
             <th>Track</th>
             <th className={"optionalColumn"}>Album</th>
-            <th>Song Duration</th>
-            <th>Play Count</th>
+            <th>Duration</th>
+            <th>Count</th>
+            <th>Last Played At</th>
           </tr>
         </thead>
         <tbody>{topTracks}</tbody>
