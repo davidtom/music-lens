@@ -10,11 +10,14 @@ import db, {
 
 const API_SECRET = getConfig().serverRuntimeConfig.API_SECRET;
 
-// TODO: this should be a POST
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  if (req.method !== "POST") {
+    throw new Error(`Invalid method: ${req.method}`);
+  }
+
   // TODO: DRY - API SECRET CHECK
   if (req.headers["authorization"] !== `Bearer ${API_SECRET}`) {
     res.status(403).end();
