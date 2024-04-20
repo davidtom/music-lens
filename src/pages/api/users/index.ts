@@ -9,7 +9,7 @@ type UserWithPlaysPerDay = Pick<User, "id" | "displayName" | "spotifyId"> & {
 
 export type Users = UserWithPlaysPerDay[];
 
-async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(_: NextApiRequest, res: NextApiResponse) {
   const results = await db.$queryRaw<Users>`
     SELECT "id", "displayName", "spotifyId", ROUND("totalPlays" / "daysSinceCreation") as "playsPerDay"
     FROM (
