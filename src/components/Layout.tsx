@@ -35,7 +35,7 @@ const Layout: React.FC = ({ children }) => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Music Lense</title>
+        <title>Music Lens</title>
         <meta
           name="description"
           content="View your music listening history, stats, and more"

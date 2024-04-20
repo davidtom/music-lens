@@ -1,5 +1,5 @@
 {
-  "name": "music-lense",
+  "name": "music-lens",
   "private": true,
   "scripts": {
     "dev": "next -p 8080",

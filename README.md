@@ -1,4 +1,4 @@
-# Music Lense
+# Music Lens
 
 View your music listening history, stats, and more.
 
