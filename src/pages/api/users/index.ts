@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import getConfig from "next/config";
 
 import db, { User } from "lib/clients/db";
+import { withSessionApiRoute } from "lib/session";
 
 type UserWithPlaysPerDay = Pick<User, "id" | "displayName" | "spotifyId"> & {
   playsPerDay: number;
@@ -9,15 +9,7 @@ type UserWithPlaysPerDay = Pick<User, "id" | "displayName" | "spotifyId"> & {
 
 export type Users = UserWithPlaysPerDay[];
 
-const API_SECRET = getConfig().serverRuntimeConfig.API_SECRET;
-
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // TODO: DRY - API SECRET CHECK
-  if (req.headers["authorization"] !== `Bearer ${API_SECRET}`) {
-    res.status(403).end();
-    return;
-  }
-
   const results = await db.$queryRaw<Users>`
     SELECT "id", "displayName", "spotifyId", ROUND("totalPlays" / "daysSinceCreation") as "playsPerDay"
     FROM (
@@ -37,4 +29,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.json(results);
 }
 
-export default handler;
+export default withSessionApiRoute(handler);
